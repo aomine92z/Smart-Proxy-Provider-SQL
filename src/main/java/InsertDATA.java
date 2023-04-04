@@ -7,7 +7,7 @@ import java.util.Collections;
 public class InsertDATA {
 
 
-                                // DO NOT RUN THIS FILE
+                        // DO NOT RUN THIS FILE
     public static void main(String[] args) {
         
         String url = "jdbc:sqlite:test.db";
