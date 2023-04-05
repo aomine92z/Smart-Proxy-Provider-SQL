@@ -100,13 +100,6 @@ public class createDatasqlite {
 
     }
 
-    // private static List<String> getCountries() {
-    // return Arrays.asList("United States", "Canada", "Mexico", "Germany",
-    // "France", "Spain", "Italy",
-    // "United Kingdom", "Russia", "China", "Japan", "South Korea", "India",
-    // "Australia", "Brazil",
-    // "Argentina", "South Africa", "Egypt", "Morocco", "Nigeria");
-    // }
     private static List<String> getCountries() {
         return Arrays.asList("Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Argentina", "Armenia",
                 "Australia",
