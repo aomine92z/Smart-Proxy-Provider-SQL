@@ -2,59 +2,58 @@ package javaclass;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import java.sql.Connection;
-import java.util.List;
-
-import java.util.List;
 
 public class URL {
-    private int idURL;
-    private int type;
-    private String countryName;
-    private int idWebsite;
+    private int id_URL;
+    private int type_URL;
+    private String countryName_URL;
+    private int idWebsite_URL;
 
-    public URL(int idURL, int type, String countryName, int idWebsite) {
-        this.idURL = idURL;
-        this.type = type;
-        this.countryName = countryName;
-        this.idWebsite = idWebsite;
+    public URL(int id_URL, int type_URL, String countryName_URL, int idWebsite_URL) {
+        this.id_URL = id_URL;
+        this.type_URL = type_URL;
+        this.countryName_URL = countryName_URL;
+        this.idWebsite_URL = idWebsite_URL;
     }
 
     public int getId_URL() {
-        return idURL;
+        return this.id_URL;
     }
 
-    public void setId_URL(int idURL) {
-        this.idURL = idURL;
+    public void setId_URL(int id_URL) {
+        this.id_URL = id_URL;
     }
 
     public int getType_URL() {
-        return type;
+        return this.type_URL;
     }
 
-    public void setType_URL(int type) {
-        this.type = type;
+    public void setType_URL(int type_URL) {
+        this.type_URL = type_URL;
     }
 
     public String getCountryName_URL() {
-        return countryName;
+        return this.countryName_URL;
     }
 
-    public void setCountryName_URL(String countryName) {
-        this.countryName = countryName;
+    public void setCountryName_URL(String countryName_URL) {
+        this.countryName_URL = countryName_URL;
     }
 
     public int getIdWebsite_URL() {
-        return idWebsite;
+        return this.idWebsite_URL;
     }
 
-    public void setIdWebsite_URL(int idWebsite) {
-        this.idWebsite = idWebsite;
+    public void setIdWebsite_URL(int idWebsite_URL) {
+        this.idWebsite_URL = idWebsite_URL;
     }
 
-    public static List<URL> loadURL() {
+    public String toString(){
+        return "Id_URL: " + this.getId_URL() + " || Type: " + this.getType_URL() + " || Country_name: " + this.getCountryName_URL() + " || Id_Website: " + this.getIdWebsite_URL();
+    }
+
+    public static List<URL> load_URLs() {
         List<URL> urls = new ArrayList<>();
         Connection conn = null;
         Statement stmt = null;
