@@ -28,8 +28,8 @@ public class robot {
 
         for (List<URL> URL_pack : URL_Big_Pack) {
             for (URL url : URL_pack) {
-                String searched_country = url.getCountry_name_URL();
-                String searched_type = url.getType_URL();
+                String searched_country = url.getCountryName_URL();
+                int searched_type = url.getType_URL();
                 //callProxyProvider(URL_Big_Pack[URL_pack].index) // First argument correspond to the service called (1,2,3,4 or 5)
                                                                 // Second Argument country name
                                                                 // Second Argument type
