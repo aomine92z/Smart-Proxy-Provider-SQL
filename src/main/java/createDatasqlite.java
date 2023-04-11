@@ -56,13 +56,14 @@ public class createDatasqlite {
                     statement.executeUpdate();
                 }
             }
-
+            // 创建Random对象
+            Random random = new Random();
             // Insert data into the Proxy table
             for (int i = 1; i <= 60; i++) {
                 String sql = "INSERT INTO Proxy (Id_Proxy, type) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
-                    int type = (i - 1) % 4 + 1; // This will cycle through the values 1, 2, 3, 4
+                    int type = (int) (Math.random() * 4) + 1; // Generate a random integer between 1 and 4
                     statement.setInt(2, type);
                     statement.executeUpdate();
                 }
