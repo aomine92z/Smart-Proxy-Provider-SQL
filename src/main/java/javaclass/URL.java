@@ -17,7 +17,7 @@ public class URL {
         this.id_website = id_website;
     }
 
-    public static List<URL> loadURL() {
+    public static List<URL> load_URLs() {
         List<URL> urls = new ArrayList<>();
         Connection conn = null;
         Statement stmt = null;
