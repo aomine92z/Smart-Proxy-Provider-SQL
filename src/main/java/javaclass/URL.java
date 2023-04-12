@@ -6,11 +6,11 @@ import java.util.List;
 
 public class URL {
     private int id_url;
-    private String type;
+    private int type;
     private String country_name;
     private int id_website;
 
-    public URL(int id_url, String type, String country_name, int id_website) {
+    public URL(int id_url, int type, String country_name, int id_website) {
         this.id_url = id_url;
         this.type = type;
         this.country_name = country_name;
@@ -33,9 +33,11 @@ public class URL {
             // Exécution de la requête SQL pour récupérer les données de la table URL
             rs = stmt.executeQuery("SELECT * FROM URL");
 
-            // Parcours du ResultSet et instanciation d'un objet URL pour chaque enregistrement
+            // Parcours du ResultSet et instanciation d'un objet URL pour chaque
+            // enregistrement
             while (rs.next()) {
-                URL url = new URL(rs.getInt("Id_URL"), rs.getString("type"), rs.getString("country_name"), rs.getInt("Id_Website"));
+                URL url = new URL(rs.getInt("Id_URL"), rs.getInt("type"), rs.getString("country_name"),
+                        rs.getInt("Id_Website"));
                 urls.add(url);
             }
         } catch (SQLException e) {
@@ -61,20 +63,24 @@ public class URL {
         return urls;
     }
 
-    public int getId_URL(){
+    public int getId_URL() {
         return this.id_url;
     }
-    public String getType_URL(){
+
+    public int getType_URL() {
         return this.type;
     }
-    public String getCountry_name_URL(){
+
+    public String getCountry_name_URL() {
         return this.country_name;
     }
-    public int getId_website(){
+
+    public int getId_website() {
         return this.id_website;
     }
 
     public String toString() {
-        return ("Id_URL: " + this.id_url + ", Type: " + this.type + ", Country: " + this.country_name + ", Id_Website: " + this.id_website);
+        return ("Id_URL: " + this.id_url + ", Type: " + this.type + ", Country: " + this.country_name + ", Id_Website: "
+                + this.id_website);
     }
 }
