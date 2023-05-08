@@ -23,7 +23,7 @@ public class createDatasqlite {
 
             // Create the Website table
             Statement stmt = conn.createStatement();
-            stmt.executeUpdate("CREATE TABLE Website(Id_Website INTEGER PRIMARY KEY)");
+            stmt.executeUpdate("CREATE TABLE Website(Id_Website INTEGER PRIMARY KEY, type INTEGER)");
 
             // Create the Proxy table
             stmt.executeUpdate("CREATE TABLE Proxy(Id_Proxy INTEGER, type INTEGER, PRIMARY KEY(Id_Proxy))");
@@ -33,26 +33,32 @@ public class createDatasqlite {
 
             // Create the URL table
             stmt.executeUpdate(
-                    "CREATE TABLE URL(Id_URL INTEGER, type INTEGER, country_name VARCHAR(50) NOT NULL, Id_Website INTEGER NOT NULL, PRIMARY KEY(Id_URL), FOREIGN KEY(country_name) REFERENCES Country(country_name), FOREIGN KEY(Id_Website) REFERENCES Website(Id_Website))");
+                    "CREATE TABLE URL(Id_URL INTEGER, Id_Website INTEGER NOT NULL, PRIMARY KEY(Id_URL), FOREIGN KEY(Id_Website) REFERENCES Website(Id_Website))");
 
-            // Create the covers table
+            // Create the proxy_covers table
             stmt.executeUpdate(
-                    "CREATE TABLE covers(Id_Proxy INTEGER, country_name VARCHAR(50), PRIMARY KEY(Id_Proxy, country_name), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy), FOREIGN KEY(country_name) REFERENCES Country(country_name))");
+                    "CREATE TABLE proxy_covers(Id_Proxy INTEGER, country_name VARCHAR(50), PRIMARY KEY(Id_Proxy, country_name), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy), FOREIGN KEY(country_name) REFERENCES Country(country_name))");
 
+            // Create the website_covers table
+            stmt.executeUpdate(
+                    "CREATE TABLE website_covers(Id_Website INTEGER, country_name VARCHAR(50), PRIMARY KEY(Id_Website, country_name), FOREIGN KEY(Id_Website) REFERENCES Proxy(Id_Website), FOREIGN KEY(country_name) REFERENCES Country(country_name))");
+            
             // Create the willRespond table
             stmt.executeUpdate(
-                    "CREATE TABLE willRespond(Id_URL INTEGER, Id_Proxy INTEGER, triedOk INTEGER, triedTotal INTEGER, PRIMARY KEY(Id_URL, Id_Proxy), FOREIGN KEY(Id_URL) REFERENCES URL(Id_URL), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
+                    "CREATE TABLE willRespond(Id_Website INTEGER, Id_Proxy INTEGER, success VARCHAR(50), timestamp VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
 
             // Create the simulation_willRespond table
             stmt.executeUpdate(
-                    "CREATE TABLE simulation_willRespond(Id_URL INTEGER, Id_Proxy INTEGER, simulation_probability DOUBLE, PRIMARY KEY(Id_URL, Id_Proxy), FOREIGN KEY(Id_URL) REFERENCES URL(Id_URL), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
+                    "CREATE TABLE simulation_willRespond(Id_Website INTEGER, Id_Proxy INTEGER, simulation_probability DOUBLE, parity_feature VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
 
             System.out.println("Database schema created successfully.");
             // Insert data into the Website table
             for (int i = 1; i <= 800; i++) {
-                String sql = "INSERT INTO Website (Id_Website) VALUES (?)";
+                String sql = "INSERT INTO Website (Id_Website, type) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
+                    int type = (int) (Math.random() * 4) + 1; // Generate a random integer between 1 and 4
+                    statement.setInt(2, type);
                     statement.executeUpdate();
                 }
             }
@@ -79,12 +85,10 @@ public class createDatasqlite {
 
             // Insert data into the URL table
             for (int i = 1; i <= 100000; i++) {
-                String sql = "INSERT INTO URL (Id_URL, type, country_name, Id_Website) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT INTO URL (Id_URL, Id_Website) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
-                    statement.setInt(2, (int) (Math.random() * 4) + 1);
-                    statement.setString(3, getCountry());
-                    statement.setInt(4, (int) (Math.random() * 800) + 1);
+                    statement.setInt(2, (int) (Math.random() * 800) + 1);
                     statement.executeUpdate();
                 }
             }
@@ -103,12 +107,12 @@ public class createDatasqlite {
 
             // Prepare the INSERT statement
             PreparedStatement insertStatement = conn
-                    .prepareStatement("INSERT INTO covers (Id_Proxy, country_name) VALUES (?, ?)");
+                    .prepareStatement("INSERT INTO proxy_covers (Id_Proxy, country_name) VALUES (?, ?)");
 
             // For each proxyid
             while (proxyIdResultSet.next()) {
                 int proxyId = proxyIdResultSet.getInt("Id_Proxy");
-                int randomCountryCount = (int) (Math.random() * 6) + 1; // Random number between 1 and 6
+                int randomCountryCount = (int) (Math.random() * 50) + 1; // Random number between 1 and 6
                 Collections.shuffle(countryNames); // Shuffle the list of country names
 
                 // Insert unique random country names
@@ -118,19 +122,51 @@ public class createDatasqlite {
                     insertStatement.executeUpdate();
                 }
             }
-            // Insert data into the simulation_willRespond table
-            for (int i = 1; i <= 100000; i++) {
-                // Fetch the URL type and country_name
-                int urlType;
-                String urlCountryName;
-                String fetchUrlDataSql = "SELECT type, country_name FROM URL WHERE Id_URL = ?";
-                try (PreparedStatement fetchUrlDataStatement = conn.prepareStatement(fetchUrlDataSql)) {
-                    fetchUrlDataStatement.setInt(1, i);
-                    ResultSet resultSet = fetchUrlDataStatement.executeQuery();
-                    resultSet.next();
-                    urlType = resultSet.getInt("type");
-                    urlCountryName = resultSet.getString("country_name");
+
+
+            // Get the list of all websiteids
+            PreparedStatement websiteIdStatement = conn.prepareStatement("SELECT Id_Website FROM Website");
+            ResultSet websiteIdResultSet = websiteIdStatement.executeQuery();
+
+            // Prepare the INSERT statement
+            PreparedStatement insertStatement2 = conn
+                    .prepareStatement("INSERT INTO website_covers (Id_Website, country_name) VALUES (?, ?)");
+
+            // For each proxyid
+            while (websiteIdResultSet.next()) {
+                int websiteId = websiteIdResultSet.getInt("Id_Website");
+                int randomCountryCount = (int) (Math.random() * 50) + 1; // Random number between 1 and 6
+                Collections.shuffle(countryNames); // Shuffle the list of country names
+
+                // Insert unique random country names
+                for (int i = 0; i < randomCountryCount; i++) {
+                    insertStatement2.setInt(1, websiteId);
+                    insertStatement2.setString(2, countryNames.get(i));
+                    insertStatement2.executeUpdate();
                 }
+            }
+
+            // Insert data into the simulation_willRespond table
+            for (int i = 1; i <= 800; i++) {
+                // Fetch the Website type and country_name
+                int WebsiteType;
+                String fetchWebsiteDataSql = "SELECT type FROM Website WHERE Id_Website = ?";
+
+                PreparedStatement WebsiteCountryNameStatement = conn.prepareStatement("SELECT country_name FROM website_covers WHERE Id_Website = ?");
+                WebsiteCountryNameStatement.setInt(1, i);
+                ResultSet WebsiteCountryNameResultSet = WebsiteCountryNameStatement.executeQuery();
+                ArrayList<String> WebsiteCountryNames = new ArrayList<>();
+                while (WebsiteCountryNameResultSet.next()) {
+                    WebsiteCountryNames.add(WebsiteCountryNameResultSet.getString("country_name"));
+                }
+
+                try (PreparedStatement fetchWebsiteDataStatement = conn.prepareStatement(fetchWebsiteDataSql)) {
+                    fetchWebsiteDataStatement.setInt(1, i);
+                    ResultSet resultSet = fetchWebsiteDataStatement.executeQuery();
+                    resultSet.next();
+                    WebsiteType = resultSet.getInt("type");
+                }
+                
 
                 for (int j = 1; j <= 60; j++) {
                     // Fetch the proxy type
@@ -144,15 +180,15 @@ public class createDatasqlite {
                     }
 
                     // Check if the country_name in the covers table matches the country_name in the
-                    // URL table
+                    // Website table
                     boolean countryNameMatches = false;
-                    String fetchCountryNameSql = "SELECT country_name FROM covers WHERE Id_Proxy = ?";
+                    String fetchCountryNameSql = "SELECT country_name FROM proxy_covers WHERE Id_Proxy = ?";
                     try (PreparedStatement fetchCountryNameStatement = conn.prepareStatement(fetchCountryNameSql)) {
                         fetchCountryNameStatement.setInt(1, j);
                         ResultSet resultSet = fetchCountryNameStatement.executeQuery();
                         while (resultSet.next()) {
                             String countryName = resultSet.getString("country_name");
-                            if (countryName.equals(urlCountryName)) {
+                            if (WebsiteCountryNames.contains(countryName)) {
                                 countryNameMatches = true;
                                 break;
                             }
@@ -161,60 +197,21 @@ public class createDatasqlite {
 
                     // Only insert a record if the URL and proxy types match, and the country_name
                     // matches
-                    if (urlType == proxyType && countryNameMatches) {
-                        String sql = "INSERT INTO simulation_willRespond (Id_URL, Id_Proxy, simulation_probability) VALUES (?, ?, ?)";
+                    if (WebsiteType == proxyType && countryNameMatches) {
+                        String sql = "INSERT INTO simulation_willRespond (Id_Website, Id_Proxy, simulation_probability, parity_feature) VALUES (?, ?, ?, ?)";
                         try (PreparedStatement statement = conn.prepareStatement(sql)) {
                             double randomValue = Math.random();
                             double truncatedValue = Math.floor(randomValue * 10000.0) / 10000.0;
+                            String parityString = new Random().nextBoolean() ? "Odd" : "Even";
                             statement.setInt(1, i);
                             statement.setInt(2, j);
                             statement.setDouble(3, truncatedValue);
+                            statement.setString(4, parityString);
                             statement.executeUpdate();
                         }
                     }
                 }
             }
-
-            // // Insert data into the simulation_willRespond table
-            // for (int i = 1; i <= 100000; i++) {
-            // // Fetch the URL type
-            // int urlType;
-            // String fetchUrlTypeSql = "SELECT type FROM URL WHERE Id_URL = ?";
-            // try (PreparedStatement fetchUrlTypeStatement =
-            // conn.prepareStatement(fetchUrlTypeSql)) {
-            // fetchUrlTypeStatement.setInt(1, i);
-            // ResultSet resultSet = fetchUrlTypeStatement.executeQuery();
-            // resultSet.next();
-            // urlType = resultSet.getInt("type");
-            // }
-
-            // for (int j = 1; j <= 60; j++) {
-            // // Fetch the proxy type
-            // int proxyType;
-            // String fetchProxyTypeSql = "SELECT type FROM Proxy WHERE Id_Proxy = ?";
-            // try (PreparedStatement fetchProxyTypeStatement =
-            // conn.prepareStatement(fetchProxyTypeSql)) {
-            // fetchProxyTypeStatement.setInt(1, j);
-            // ResultSet resultSet = fetchProxyTypeStatement.executeQuery();
-            // resultSet.next();
-            // proxyType = resultSet.getInt("type");
-            // }
-
-            // // Only insert a record if the URL and proxy types match
-            // if (urlType == proxyType) {
-            // String sql = "INSERT INTO simulation_willRespond (Id_URL, Id_Proxy,
-            // simulation_probability) VALUES (?, ?, ?)";
-            // try (PreparedStatement statement = conn.prepareStatement(sql)) {
-            // double randomValue = Math.random();
-            // double truncatedValue = Math.floor(randomValue * 10000.0) / 10000.0;
-            // statement.setInt(1, i);
-            // statement.setInt(2, j);
-            // statement.setDouble(3, truncatedValue);
-            // statement.executeUpdate();
-            // }
-            // }
-            // }
-            // }
 
         } catch (ClassNotFoundException | SQLException e) {
             e.printStackTrace();
@@ -240,12 +237,12 @@ public class createDatasqlite {
                 "Saudi Arabia");
     }
 
-    private static String getCountry() {
-        List<String> countries = getCountries();
-        Random random = new Random();
-        int index = random.nextInt(countries.size());
-        return countries.get(index);
-    }
+    // private static String getCountry() {
+    //     List<String> countries = getCountries();
+    //     Random random = new Random();
+    //     int index = random.nextInt(countries.size());
+    //     return countries.get(index);
+    // }
 
 }
 

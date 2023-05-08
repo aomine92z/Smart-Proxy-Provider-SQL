@@ -95,9 +95,13 @@ public class PP_Service {
             return null;
         }
 
+        // sort la liste de proxies par probabilités historiques
+        // on sélectionne le "meilleur" proxy et on le retourne
+        // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste obtenue
+
         Random random = new Random();
         int randomIndex = random.nextInt(matchingProxies.size());
-        return matchingProxies.get(randomIndex);
+        return matchingProxies.get(randomIndex);    // c'est ici que se fera le choix "intelligent" du proxy
     }
 
 
