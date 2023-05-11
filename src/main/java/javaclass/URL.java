@@ -3,21 +3,26 @@ package javaclass;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
+
+import javax.lang.model.type.NullType;
+import com.google.protobuf.NullValue;
 
 public class URL {
     private int id_url;
-    private int type;
-    private String country_name;
+    private Integer type;
+    private List<String> country_name;
     private int id_website;
 
-    public URL(int id_url, int type, String country_name, int id_website) {
+    public URL(int id_url, Integer type, List<String> country_name, int id_website) {
         this.id_url = id_url;
         this.type = type;
         this.country_name = country_name;
         this.id_website = id_website;
     }
 
-    public static List<URL> load_URLs() {
+    public static List<URL> load_URLs(Map<Integer, Website> websites) {
         List<URL> urls = new ArrayList<>();
         Connection conn = null;
         Statement stmt = null;
@@ -33,11 +38,12 @@ public class URL {
             // Exécution de la requête SQL pour récupérer les données de la table URL
             rs = stmt.executeQuery("SELECT * FROM URL");
 
+            Integer type = websites.get(rs.getInt("Id_Website")).getType_website();
+            List<String> country_name = websites.get(rs.getInt("Id_Website")).getCountry_name_website();
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-                URL url = new URL(rs.getInt("Id_URL"), rs.getInt("type"), rs.getString("country_name"),
-                        rs.getInt("Id_Website"));
+                URL url = new URL(rs.getInt("Id_URL"), type, country_name, rs.getInt("Id_Website"));
                 urls.add(url);
             }
         } catch (SQLException e) {
@@ -71,7 +77,7 @@ public class URL {
         return this.type;
     }
 
-    public String getCountry_name_URL() {
+    public List<String> getCountry_name_URL() {
         return this.country_name;
     }
 
@@ -80,7 +86,8 @@ public class URL {
     }
 
     public String toString() {
-        return ("Id_URL: " + this.id_url + ", Type: " + this.type + ", Country: " + this.country_name + ", Id_Website: "
-                + this.id_website);
+        String countryNamesStr = String.join(", ", this.country_name);
+        return "Id_URL: " + this.id_url + " || Type: " + this.type + " || Country_name: " + countryNamesStr
+                + "Id_Website: " + this.id_website;
     }
 }

@@ -2,6 +2,7 @@ import java.util.List;
 import java.util.Map;
 
 import javaclass.URL;
+import javaclass.Website;
 import javaclass.Proxy;
 import javaclass.SimulationWillRespond;
 import javaclass.WillRespond;
@@ -17,7 +18,9 @@ public class robot {
 
         while (System.currentTimeMillis() < endTime) {
 
-            List<URL> urls = URL.load_URLs();
+            // First we load the data
+            Map<Integer, Website> websites = Website.load_Websites();
+            List<URL> urls = URL.load_URLs(websites);
             List<Proxy> proxies = Proxy.load_Proxies();
             Map<String, WillRespond> willresponds = WillRespond.load_willRespond();
             Map<String, SimulationWillRespond> simuwillresponds = SimulationWillRespond.load_simulationWillRespond();
