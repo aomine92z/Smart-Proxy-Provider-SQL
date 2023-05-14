@@ -67,7 +67,7 @@ public class PP_Service {
                     }
                 }
             } else {
-                System.out.println("No matching proxy found for URL: " + url.toString());
+                System.out.println("No matching proxy found for Website: " + url.toString());
             }
 
         }
