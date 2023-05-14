@@ -33,35 +33,37 @@ public class PP_Service {
             Proxy matchingProxy = findMatchingProxy(url, proxies);
 
             if (matchingProxy != null) {
-                String key = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
                 WillRespond foundWillRespond = willresponds.get(key);
                 SimulationWillRespond foundSimulation = simuwillresponds.get(key);
 
                 if (Math.random() > foundSimulation.getProbabilityRejection()) {
                     if (foundWillRespond != null) {
-                        System.out.println("Called proxy provider service for URL : " + url.getId_URL()
+                        System.out.println("Called proxy provider service for website : " + url.getId_website()
                                 + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
                         foundWillRespond.addNewSuccess();
                         foundWillRespond.addNewTry();
                         willresponds.put(key, foundWillRespond);
                     } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(), matchingProxy.getId_Proxy(), 1,
+                        WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                                1,
                                 1);
-                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                        String newKey = url.getId_website() + "-" + matchingProxy.getId_Proxy();
                         newWillRespond.addNewSuccess();
                         newWillRespond.addNewTry();
                         willresponds.put(newKey, newWillRespond);
                     }
                 } else {
-                    System.out.println("Proxy provider service hasn't scrapped URL : " + url.getId_URL()
+                    System.out.println("Proxy provider service hasn't scrapped website : " + url.getId_website()
                             + " using Proxy : " + matchingProxy.getId_Proxy());
                     if (foundWillRespond != null) {
                         foundWillRespond.addNewTry();
                         willresponds.put(key, foundWillRespond);
                     } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(), matchingProxy.getId_Proxy(), 1,
+                        WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                                1,
                                 1);
-                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                        String newKey = url.getId_website() + "-" + matchingProxy.getId_Proxy();
                         newWillRespond.addNewTry();
                         willresponds.put(newKey, newWillRespond);
                     }

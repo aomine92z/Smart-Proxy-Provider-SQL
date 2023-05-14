@@ -9,23 +9,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class WillRespond {
-    private int Id_URL;
+    private int Id_website;
     private int Id_Proxy;
     private int triedOk;
     private int triedTotal;
 
-    public WillRespond(int Id_URL, int Id_Proxy, int triedOk, int triedTotal) {
-        this.Id_URL = Id_URL;
+    public WillRespond(int Id_website, int Id_Proxy, int triedOk, int triedTotal) {
+        this.Id_website = Id_website;
         this.Id_Proxy = Id_Proxy;
         this.triedOk = triedOk;
         this.triedTotal = triedTotal;
     }
 
-    public int getId_URL(){
-        return this.Id_URL;
+    public int getId_website() {
+        return this.Id_website;
     }
 
-    public int getId_Proxy(){
+    public int getId_Proxy() {
         return this.Id_Proxy;
     }
 
@@ -34,8 +34,6 @@ public class WillRespond {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-    
-
 
         try {
             // Connexion à la base de données
@@ -50,8 +48,9 @@ public class WillRespond {
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-                WillRespond willrespond = new WillRespond(rs.getInt("Id_URL"), rs.getInt("Id_Proxy"), rs.getInt("triedOk"), rs.getInt("triedTotal"));
-                String key = willrespond.getId_URL() + "-" + willrespond.getId_Proxy();
+                WillRespond willrespond = new WillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"),
+                        rs.getInt("triedOk"), rs.getInt("triedTotal"));
+                String key = willrespond.getId_website() + "-" + willrespond.getId_Proxy();
                 willrespondsMap.put(key, willrespond);
             }
         } catch (SQLException e) {
@@ -76,23 +75,19 @@ public class WillRespond {
         return willrespondsMap;
     }
 
+    public String toString() {
+        return ("Id_URL: " + this.Id_website + ", Id_Proxy: " + this.Id_Proxy + ", TriedOk: " + this.triedOk
+                + ", TriedTotal: " + this.triedTotal);
+    }
 
+    public int addNewTry() {
+        this.triedTotal += 1;
+        return this.triedTotal;
+    }
 
-public String toString() {
-    return ("Id_URL: " + this.Id_URL + ", Id_Proxy: " + this.Id_Proxy + ", TriedOk: " + this.triedOk + ", TriedTotal: " + this.triedTotal);
-}
-
-public int addNewTry(){
-    this.triedTotal+=1;
-    return this.triedTotal;
-}
-
-public int addNewSuccess() {
-    this.triedOk+=1;
-    return this.triedOk;
-}
-
-
-
+    public int addNewSuccess() {
+        this.triedOk += 1;
+        return this.triedOk;
+    }
 
 }
