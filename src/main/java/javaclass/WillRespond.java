@@ -25,7 +25,7 @@ public class WillRespond {
         return this.Id_Website;
     }
 
-    public int getId_Proxy(){
+    public int getId_Proxy() {
         return this.Id_Proxy;
     }
 
@@ -42,8 +42,6 @@ public class WillRespond {
         Connection conn = null;
         Statement stmt = null;
         ResultSet rs = null;
-    
-
 
         try {
             // Connexion à la base de données
@@ -59,7 +57,7 @@ public class WillRespond {
             // enregistrement
             while (rs.next()) {
                 WillRespond willrespond = new WillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"), rs.getString("success"), rs.getString("timestamp"));
-                String key = willrespond.getId_Website() + "-" + willrespond.getId_Proxy();
+                String key = willrespond.getId_Website() + "-" + willrespond.getId_Proxy() + "-" + willrespond.get_Timestamp();
                 willrespondsMap.put(key, willrespond);
             }
         } catch (SQLException e) {

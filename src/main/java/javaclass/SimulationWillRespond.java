@@ -9,21 +9,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SimulationWillRespond {
-    private int Id_URL;
+    private int Id_website;
     private int Id_Proxy;
     private double probabilityRejection;
 
     private String hoursWorking;
 
-    public SimulationWillRespond(int Id_URL, int Id_Proxy, double probabilityRejection, String hoursWorking) {
-        this.Id_URL = Id_URL;
+    public SimulationWillRespond(int Id_website, int Id_Proxy, double probabilityRejection, String hoursWorking) {
+        this.Id_website = Id_website;
         this.Id_Proxy = Id_Proxy;
         this.probabilityRejection = probabilityRejection;
         this.hoursWorking = hoursWorking;
     }
 
-    public int getId_URL() {
-        return this.Id_URL;
+    public int getId_website() {
+        return this.Id_website;
     }
 
     public int getId_Proxy() {
@@ -57,10 +57,8 @@ public class SimulationWillRespond {
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-
-                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_URL"),
-                        rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"), rs.getString("parity_feature"));
-                String key = simulationwillrespond.getId_URL() + "-" + simulationwillrespond.getId_Proxy();
+                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"), rs.getString("parity_feature"));
+                String key = simulationwillrespond.getId_website() + "-" + simulationwillrespond.getId_Proxy();
                 simulationWillrespondsMap.put(key, simulationwillrespond);
             }
         } catch (SQLException e) {
@@ -86,6 +84,7 @@ public class SimulationWillRespond {
     }
 
     public String toString() {
-        return ("Id_URL: " + this.Id_URL + ", Id_Proxy: " + this.Id_Proxy + ", TriedOk: " + this.probabilityRejection);
+        return ("Id_URL: " + this.Id_website + ", Id_Proxy: " + this.Id_Proxy + ", TriedOk: "
+                + this.probabilityRejection);
     }
 }
