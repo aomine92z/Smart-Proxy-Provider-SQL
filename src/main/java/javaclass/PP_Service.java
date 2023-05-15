@@ -202,16 +202,18 @@ public class PP_Service {
 
         // Récupérer l'heure actuelle et le convertir en int
         String timestamp = PP_Service.getTime();
+        String currentHourParity;
         int currentHour = Integer.parseInt(timestamp.substring(0, 0));
         String workingHours = foundSimulation.getHoursWorking();
 
-        if (workingHours == "Even") {
-            if (currentHour % 2 != 0) {
+        if (currentHour % 2 != 0) {
+            currentHourParity = "Even";
+            if (workingHours == currentHourParity) {
                 proba = foundSimulation.getProbabilityRejection();
             }
-        }
-        if (workingHours == "Odd") {
-            if (currentHour % 2 == 0) {
+        } else {
+            currentHourParity = "Odd";
+            if (workingHours == currentHourParity) {
                 proba = foundSimulation.getProbabilityRejection();
             }
         }
