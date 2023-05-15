@@ -13,22 +13,29 @@ public class SimulationWillRespond {
     private int Id_Proxy;
     private double probabilityRejection;
 
-    public SimulationWillRespond(int Id_URL, int Id_Proxy, double probabilityRejection) {
+    private String hoursWorking;
+
+    public SimulationWillRespond(int Id_URL, int Id_Proxy, double probabilityRejection, String hoursWorking) {
         this.Id_URL = Id_URL;
         this.Id_Proxy = Id_Proxy;
         this.probabilityRejection = probabilityRejection;
+        this.hoursWorking = hoursWorking;
     }
 
-    public int getId_URL(){
+    public int getId_URL() {
         return this.Id_URL;
     }
 
-    public int getId_Proxy(){
+    public int getId_Proxy() {
         return this.Id_Proxy;
     }
 
-    public double getProbabilityRejection(){
+    public double getProbabilityRejection() {
         return this.probabilityRejection;
+    }
+
+    public String getHoursWorking() {
+        return this.hoursWorking;
     }
 
     public static Map<String, SimulationWillRespond> load_simulationWillRespond() {
@@ -50,7 +57,9 @@ public class SimulationWillRespond {
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_URL"), rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"));
+
+                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_URL"),
+                        rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"), rs.getString("parity_feature"));
                 String key = simulationwillrespond.getId_URL() + "-" + simulationwillrespond.getId_Proxy();
                 simulationWillrespondsMap.put(key, simulationwillrespond);
             }

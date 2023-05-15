@@ -18,6 +18,18 @@ public class robot {
 
         while (System.currentTimeMillis() < endTime) {
 
+            // Recevoir le timestamp actuel
+            long elapsedTime = System.currentTimeMillis() - startTime;
+
+            // Transformer le timestamp en seconds et minutes (qui represente d'heures en
+            // realité)
+            long elapsedSeconds = elapsedTime / 1000;
+            long hour = elapsedSeconds / 60;
+            long seconds = elapsedSeconds % 60;
+
+            // Fusionner les unités de temps
+            String time = hour + ":" + seconds + ":" + elapsedTime;
+
             // First we load the data
             Map<Integer, Website> websites = Website.load_Websites();
             List<URL> urls = URL.load_URLs(websites);
@@ -51,11 +63,16 @@ public class robot {
             // URL_Big_Pack.add(URL_pack5);
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
-            serviceRunners.add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds));
-            serviceRunners.add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds));
-            serviceRunners.add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds));
-            serviceRunners.add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds));
-            serviceRunners.add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds));
+            serviceRunners
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime));
+            serviceRunners
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime));
+            serviceRunners
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime));
+            serviceRunners
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime));
+            serviceRunners
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime));
 
             List<Thread> threads = new ArrayList<>();
 
