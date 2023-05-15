@@ -7,8 +7,16 @@ import javaclass.Proxy;
 import javaclass.SimulationWillRespond;
 import javaclass.WillRespond;
 import javaclass.PP_Service;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class robot {
     public static void main(String[] args) throws InterruptedException {
@@ -88,6 +96,11 @@ public class robot {
                 threads.add(thread);
                 thread.start();
             }
+
+            Map<String, WillRespond> willRespondFinal = new HashMap<>(null);
+            for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
+                 willRespondFinal.putAll(serviceRunner.getWillResponds());
+            }
             // for (List<URL> URL_pack : URL_Big_Pack) {
             // for (URL url : URL_pack) {
             // String searched_country = url.getCountryName_URL();
@@ -98,9 +111,54 @@ public class robot {
             // // Second Argument type
             // }
             // }
+            saveData(willRespondFinal);
 
             Thread.sleep(1000);
         }
 
     }
+
+
+
+    public static void saveData(Map<String, WillRespond> willRespondsMap){
+
+        Connection conn = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+
+        try {
+                // Connexion à la base de données
+                conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+                
+                for (Map.Entry<String, WillRespond> willRespond : willRespondsMap.entrySet()) {
+                        String sql = "INSERT INTO willRespond (Id_Website, Id_Proxy, success, timestamp) VALUES (?, ?, ?, ?)";
+                        try (PreparedStatement statement = conn.prepareStatement(sql)) {
+                            statement.setInt(1, willRespond.getValue().getId_Website());
+                            statement.setInt(2, willRespond.getValue().getId_Proxy());
+                            statement.setString(3, willRespond.getValue().get_Success());
+                            statement.setString(4, willRespond.getValue().get_Timestamp());
+                            statement.executeUpdate();
+                        }
+                    }
+
+        } catch (SQLException e) {
+                e.printStackTrace();
+        } finally {
+                // Fermeture des objets ResultSet, Statement et Connection
+                try {
+                if (rs != null) {
+                        rs.close();
+                }
+                if (stmt != null) {
+                        stmt.close();
+                }
+                if (conn != null) {
+                        conn.close();
+                }
+                } catch (SQLException e) {
+                e.printStackTrace();
+                }
+        }
+        }
 }
+

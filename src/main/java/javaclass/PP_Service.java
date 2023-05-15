@@ -1,6 +1,7 @@
 package javaclass;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -27,8 +28,12 @@ public class PP_Service {
             return startTime;
         }
 
+        public Map<String, WillRespond> getWillResponds(){
+            return this.willresponds;
+        }
+
         public void run() {
-            callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
+            this.willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
         }
 
     }
@@ -41,50 +46,33 @@ public class PP_Service {
             Proxy matchingProxy = findMatchingProxy(url, proxies);
 
             if (matchingProxy != null) {
+
                 String key = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
-                WillRespond foundWillRespond = willresponds.get(key);
+
                 SimulationWillRespond foundSimulation = simuwillresponds.get(key);
-
-                double proba = getProba(foundSimulation);
-
+                Map<String, Object> ProbaTimeStamp= getProba(foundSimulation);
+                double proba = (double) ProbaTimeStamp.get("proba");
+                String timestamp = (String) ProbaTimeStamp.get("timestamp");
+                String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                
                 // Choice of proxy working
-                if (Math.random() > foundSimulation.getProbabilityRejection()) {
-                    if (foundWillRespond != null) {
-                        System.out.println("Called proxy provider service for URL : " +
-                                url.getId_URL()
-                                + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
-                        foundWillRespond.addNewSuccess();
-                        foundWillRespond.addNewTry();
-                        willresponds.put(key, foundWillRespond);
-                    } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(),
-                                matchingProxy.getId_Proxy(), 1,
-                                1);
-                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
-                        newWillRespond.addNewSuccess();
-                        newWillRespond.addNewTry();
-                        willresponds.put(newKey, newWillRespond);
+                if (Math.random() > proba) {
+                    System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website() + " using Proxy : " + matchingProxy.getId_Proxy());
+                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(), "False", timestamp);
+                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
+                    willresponds.put(newKey, newWillRespond);
+                        
                     }
-                } else {
-                    System.out.println("Proxy provider service hasn't scrapped URL : " +
-                            url.getId_URL()
-                            + " using Proxy : " + matchingProxy.getId_Proxy());
-                    if (foundWillRespond != null) {
-                        foundWillRespond.addNewTry();
-                        willresponds.put(key, foundWillRespond);
-                    } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(),
-                                matchingProxy.getId_Proxy(), 1,
-                                1);
-                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
-                        newWillRespond.addNewTry();
-                        willresponds.put(newKey, newWillRespond);
+                else {
+                    System.out.println("Called proxy provider service for Website : " + url.getId_website() + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
+                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(), "True", timestamp);
+                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;;
+                    willresponds.put(newKey, newWillRespond);
                     }
-                }
             } else {
-                System.out.println("No matching proxy found for Website: " + url.toString());
+                System.out.println("No matching proxy found for Website: " + url.getId_website());
             }
-
+        
         }
         return willresponds;
     }
@@ -107,8 +95,10 @@ public class PP_Service {
         for (Proxy proxy : proxies) {
             if (proxy.getType_Proxy() == url.getType_URL()) {
                 List<String> proxyCountries = proxy.getCountryName_Proxy();
-                if (proxyCountries.contains(url.getCountry_name_URL())) {
+                for (String element : url.getCountry_name_URL())
+                if (proxyCountries.contains(element)) {
                     matchingProxies.add(proxy);
+                    break;
                 }
             }
         }
@@ -197,26 +187,28 @@ public class PP_Service {
     // }
 
     // Recevoir la probabilité pour qu'un proxy fonctionne
-    public static double getProba(SimulationWillRespond foundSimulation) {
+    public static Map<String, Object> getProba(SimulationWillRespond foundSimulation) {
         double proba = 0;
-
-        // Récupérer l'heure actuelle et le convertir en int
         String timestamp = PP_Service.getTime();
         String currentHourParity;
         int currentHour = Integer.parseInt(timestamp.substring(0, 0));
         String workingHours = foundSimulation.getHoursWorking();
-
+    
         if (currentHour % 2 != 0) {
             currentHourParity = "Even";
-            if (workingHours == currentHourParity) {
+            if (workingHours.equals(currentHourParity)) {
                 proba = foundSimulation.getProbabilityRejection();
             }
         } else {
             currentHourParity = "Odd";
-            if (workingHours == currentHourParity) {
+            if (workingHours.equals(currentHourParity)) {
                 proba = foundSimulation.getProbabilityRejection();
             }
         }
-        return proba;
+    
+        Map<String, Object> result = new HashMap<>();
+        result.put("proba", proba);
+        result.put("timestamp", timestamp);
+        return result;
     }
 }
