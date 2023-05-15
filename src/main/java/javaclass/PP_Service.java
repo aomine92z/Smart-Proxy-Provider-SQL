@@ -12,23 +12,31 @@ public class PP_Service {
         private List<Proxy> proxies;
         private Map<String, WillRespond> willresponds;
         private Map<String, SimulationWillRespond> simuwillresponds;
+        private static long startTime;
 
         public ServiceRunner(List<URL> URL_pack, List<Proxy> proxies, Map<String, WillRespond> willresponds,
-                Map<String, SimulationWillRespond> simuwillresponds) {
+                Map<String, SimulationWillRespond> simuwillresponds, long startTime) {
             this.URL_pack = URL_pack;
             this.proxies = proxies;
             this.willresponds = willresponds;
             this.simuwillresponds = simuwillresponds;
+            ServiceRunner.startTime = startTime;
+        }
+
+        public static long getStartTime() {
+            return startTime;
         }
 
         public void run() {
             callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
         }
+
     }
 
     private static Map<String, WillRespond> callProxyProvider(List<URL> URL_pack, List<Proxy> proxies,
             Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds) {
         // call the service with the given arguments
+
         for (URL url : URL_pack) {
             Proxy matchingProxy = findMatchingProxy(url, proxies);
 
@@ -37,15 +45,20 @@ public class PP_Service {
                 WillRespond foundWillRespond = willresponds.get(key);
                 SimulationWillRespond foundSimulation = simuwillresponds.get(key);
 
+                double proba = getProba(foundSimulation);
+
+                // Choice of proxy working
                 if (Math.random() > foundSimulation.getProbabilityRejection()) {
                     if (foundWillRespond != null) {
-                        System.out.println("Called proxy provider service for URL : " + url.getId_URL()
+                        System.out.println("Called proxy provider service for URL : " +
+                                url.getId_URL()
                                 + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
                         foundWillRespond.addNewSuccess();
                         foundWillRespond.addNewTry();
                         willresponds.put(key, foundWillRespond);
                     } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(), matchingProxy.getId_Proxy(), 1,
+                        WillRespond newWillRespond = new WillRespond(url.getId_URL(),
+                                matchingProxy.getId_Proxy(), 1,
                                 1);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
                         newWillRespond.addNewSuccess();
@@ -53,13 +66,15 @@ public class PP_Service {
                         willresponds.put(newKey, newWillRespond);
                     }
                 } else {
-                    System.out.println("Proxy provider service hasn't scrapped URL : " + url.getId_URL()
+                    System.out.println("Proxy provider service hasn't scrapped URL : " +
+                            url.getId_URL()
                             + " using Proxy : " + matchingProxy.getId_Proxy());
                     if (foundWillRespond != null) {
                         foundWillRespond.addNewTry();
                         willresponds.put(key, foundWillRespond);
                     } else {
-                        WillRespond newWillRespond = new WillRespond(url.getId_URL(), matchingProxy.getId_Proxy(), 1,
+                        WillRespond newWillRespond = new WillRespond(url.getId_URL(),
+                                matchingProxy.getId_Proxy(), 1,
                                 1);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
                         newWillRespond.addNewTry();
@@ -85,6 +100,7 @@ public class PP_Service {
     // }
     // return null;
     // }
+
     private static Proxy findMatchingProxy(URL url, List<Proxy> proxies) {
         List<Proxy> matchingProxies = new ArrayList<>();
 
@@ -109,6 +125,22 @@ public class PP_Service {
         Random random = new Random();
         int randomIndex = random.nextInt(matchingProxies.size());
         return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
+    }
+
+    private static String getTime() {
+        // Recevoir le timestamp actuel
+        long elapsedTime = System.currentTimeMillis() - ServiceRunner.getStartTime();
+
+        // Transformer le timestamp en seconds et minutes (qui represente d'heures en
+        // realité)
+        long elapsedSeconds = elapsedTime / 1000;
+        long hour = elapsedSeconds / 60;
+        long seconds = elapsedSeconds % 60;
+
+        // Fusionner les unités de temps
+        String time = hour + ":" + seconds + ":" + elapsedTime;
+
+        return time;
     }
 
     // private boolean getAttempt() {
@@ -164,4 +196,27 @@ public class PP_Service {
 
     // }
 
+    // Recevoir la probabilité pour qu'un proxy fonctionne
+    public static double getProba(SimulationWillRespond foundSimulation) {
+        double proba = 0;
+
+        // Récupérer l'heure actuelle et le convertir en int
+        String timestamp = PP_Service.getTime();
+        String currentHourParity;
+        int currentHour = Integer.parseInt(timestamp.substring(0, 0));
+        String workingHours = foundSimulation.getHoursWorking();
+
+        if (currentHour % 2 != 0) {
+            currentHourParity = "Even";
+            if (workingHours == currentHourParity) {
+                proba = foundSimulation.getProbabilityRejection();
+            }
+        } else {
+            currentHourParity = "Odd";
+            if (workingHours == currentHourParity) {
+                proba = foundSimulation.getProbabilityRejection();
+            }
+        }
+        return proba;
+    }
 }
