@@ -97,7 +97,7 @@ public class robot {
                 thread.start();
             }
 
-            Map<String, WillRespond> willRespondFinal = new HashMap<>(null);
+            Map<String, WillRespond> willRespondFinal = new HashMap<>();
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
                 willRespondFinal.putAll(serviceRunner.getWillResponds());
             }
@@ -113,7 +113,7 @@ public class robot {
             // }
             saveData(willRespondFinal);
 
-            Thread.sleep(1000);
+            Thread.sleep(60000);
         }
 
     }
@@ -126,6 +126,7 @@ public class robot {
 
         try {
             // Connexion à la base de données
+            System.out.println(willRespondsMap.size());
             conn = DriverManager.getConnection("jdbc:sqlite:test.db");
 
             for (Map.Entry<String, WillRespond> willRespond : willRespondsMap.entrySet()) {

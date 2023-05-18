@@ -45,7 +45,6 @@ public class URL {
                 List<String> country_name = websites.get(rs.getInt("Id_Website")).getCountry_name_website();
 
                 URL url = new URL(rs.getInt("Id_URL"), type, country_name, rs.getInt("Id_Website"));
-                System.out.println(type);
                 urls.add(url);
             }
         } catch (SQLException e) {
