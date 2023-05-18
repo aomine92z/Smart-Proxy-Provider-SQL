@@ -10,6 +10,10 @@ import java.util.Random;
 import java.sql.ResultSet;
 import java.util.Collections;
 
+// PRE-TACHES : DEFINIR UN RANDOM SEED POUR LA CREATION DE LA BDD
+// PREMIERE TACHE : REMODELER LA BDD
+// DEUXIEME TACHE : RELANCER LE ROBOT.JAVA POUR TESTER LE NOUVEAU MODELE DE DONNEES
+
 public class createDatasqlite {
 
     public static void main(String[] args) {
@@ -45,7 +49,7 @@ public class createDatasqlite {
             
             // Create the willRespond table
             stmt.executeUpdate(
-                    "CREATE TABLE willRespond(Id_Website INTEGER, Id_Proxy INTEGER, success VARCHAR(50), timestamp VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
+                    "CREATE TABLE willRespond(Id_Website INTEGER, Id_Proxy INTEGER, success VARCHAR(50), timestamp VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy, timestamp), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
 
             // Create the simulation_willRespond table
             stmt.executeUpdate(
