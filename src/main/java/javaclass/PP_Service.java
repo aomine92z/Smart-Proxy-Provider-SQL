@@ -28,7 +28,7 @@ public class PP_Service {
             return startTime;
         }
 
-        public Map<String, WillRespond> getWillResponds(){
+        public Map<String, WillRespond> getWillResponds() {
             return this.willresponds;
         }
 
@@ -50,29 +50,34 @@ public class PP_Service {
                 String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
                 SimulationWillRespond foundSimulation = simuwillresponds.get(key);
-                Map<String, Object> ProbaTimeStamp= getProba(foundSimulation);
+                System.out.println(foundSimulation);
+                Map<String, Object> ProbaTimeStamp = getProba(foundSimulation);
                 double proba = (double) ProbaTimeStamp.get("proba");
                 String timestamp = (String) ProbaTimeStamp.get("timestamp");
                 String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
-                
+
                 // Choice of proxy working
                 if (Math.random() > proba) {
-                    System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website() + " using Proxy : " + matchingProxy.getId_Proxy());
-                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(), "False", timestamp);
+                    System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
+                            + " using Proxy : " + matchingProxy.getId_Proxy());
+                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                            "False", timestamp);
                     String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                     willresponds.put(newKey, newWillRespond);
-                        
-                    }
-                else {
-                    System.out.println("Called proxy provider service for Website : " + url.getId_website() + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
-                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(), "True", timestamp);
-                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;;
+
+                } else {
+                    System.out.println("Called proxy provider service for Website : " + url.getId_website()
+                            + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
+                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                            "True", timestamp);
+                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
+                    ;
                     willresponds.put(newKey, newWillRespond);
-                    }
+                }
             } else {
                 System.out.println("No matching proxy found for Website: " + url.getId_website());
             }
-        
+
         }
         return willresponds;
     }
@@ -120,19 +125,19 @@ public class PP_Service {
     private static String getTime() {
         // Receive the current timestamp
         long elapsedTime = System.currentTimeMillis() - ServiceRunner.getStartTime();
-    
+
         // Convert the timestamp to minutes, hours, and centiseconds
         long elapsedSeconds = elapsedTime / 1000;
         long minutes = elapsedSeconds / 60;
         long seconds = elapsedSeconds % 60;
         long centiseconds = (elapsedTime % 1000) / 10; // Get two-digit centiseconds
-    
+
         // Format the time units with leading zeros if necessary
         String time = String.format("%d:%02d:%02d", minutes, seconds, centiseconds);
-    
+
         return time;
     }
-    
+
     // private boolean getAttempt() {
 
     // }
@@ -193,7 +198,7 @@ public class PP_Service {
         String currentHourParity;
         int currentHour = Integer.parseInt(timestamp.substring(0, 1));
         String workingHours = foundSimulation.getHoursWorking();
-    
+
         if (currentHour % 2 == 0) {
             currentHourParity = "Even";
             if (workingHours.equals(currentHourParity)) {
@@ -205,7 +210,7 @@ public class PP_Service {
                 proba = foundSimulation.getProbabilityRejection();
             }
         }
-    
+
         Map<String, Object> result = new HashMap<>();
         result.put("proba", proba);
         result.put("timestamp", timestamp);

@@ -11,11 +11,11 @@ import com.google.protobuf.NullValue;
 
 public class URL {
     private int id_url;
-    private Integer type;
+    private int type;
     private List<String> country_name;
     private int id_website;
 
-    public URL(int id_url, Integer type, List<String> country_name, int id_website) {
+    public URL(int id_url, int type, List<String> country_name, int id_website) {
         this.id_url = id_url;
         this.type = type;
         this.country_name = country_name;
@@ -38,12 +38,14 @@ public class URL {
             // Exécution de la requête SQL pour récupérer les données de la table URL
             rs = stmt.executeQuery("SELECT * FROM URL");
 
-            Integer type = websites.get(rs.getInt("Id_Website")).getType_website();
-            List<String> country_name = websites.get(rs.getInt("Id_Website")).getCountry_name_website();
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
+                int type = websites.get(rs.getInt("Id_Website")).getType_website();
+                List<String> country_name = websites.get(rs.getInt("Id_Website")).getCountry_name_website();
+
                 URL url = new URL(rs.getInt("Id_URL"), type, country_name, rs.getInt("Id_Website"));
+                System.out.println(type);
                 urls.add(url);
             }
         } catch (SQLException e) {

@@ -12,7 +12,6 @@ public class SimulationWillRespond {
     private int Id_website;
     private int Id_Proxy;
     private double probabilityRejection;
-
     private String hoursWorking;
 
     public SimulationWillRespond(int Id_website, int Id_Proxy, double probabilityRejection, String hoursWorking) {
@@ -57,7 +56,8 @@ public class SimulationWillRespond {
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"), rs.getString("parity_feature"));
+                SimulationWillRespond simulationwillrespond = new SimulationWillRespond(rs.getInt("Id_Website"),
+                        rs.getInt("Id_Proxy"), rs.getDouble("simulation_probability"), rs.getString("parity_feature"));
                 String key = simulationwillrespond.getId_website() + "-" + simulationwillrespond.getId_Proxy();
                 simulationWillrespondsMap.put(key, simulationwillrespond);
             }
