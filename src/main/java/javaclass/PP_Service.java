@@ -47,7 +47,7 @@ public class PP_Service {
 
             if (matchingProxy != null) {
 
-                String key = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
                 SimulationWillRespond foundSimulation = simuwillresponds.get(key);
                 Map<String, Object> ProbaTimeStamp= getProba(foundSimulation);
@@ -96,10 +96,10 @@ public class PP_Service {
             if (proxy.getType_Proxy() == url.getType_URL()) {
                 List<String> proxyCountries = proxy.getCountryName_Proxy();
                 for (String element : url.getCountry_name_URL())
-                if (proxyCountries.contains(element)) {
-                    matchingProxies.add(proxy);
-                    break;
-                }
+                    if (proxyCountries.contains(element)) {
+                        matchingProxies.add(proxy);
+                        break;
+                    }
             }
         }
 
@@ -118,21 +118,21 @@ public class PP_Service {
     }
 
     private static String getTime() {
-        // Recevoir le timestamp actuel
+        // Receive the current timestamp
         long elapsedTime = System.currentTimeMillis() - ServiceRunner.getStartTime();
-
-        // Transformer le timestamp en seconds et minutes (qui represente d'heures en
-        // realité)
+    
+        // Convert the timestamp to minutes, hours, and centiseconds
         long elapsedSeconds = elapsedTime / 1000;
-        long hour = elapsedSeconds / 60;
+        long minutes = elapsedSeconds / 60;
         long seconds = elapsedSeconds % 60;
-
-        // Fusionner les unités de temps
-        String time = hour + ":" + seconds + ":" + elapsedTime;
-
+        long centiseconds = (elapsedTime % 1000) / 10; // Get two-digit centiseconds
+    
+        // Format the time units with leading zeros if necessary
+        String time = String.format("%d:%02d:%02d", minutes, seconds, centiseconds);
+    
         return time;
     }
-
+    
     // private boolean getAttempt() {
 
     // }
@@ -191,10 +191,10 @@ public class PP_Service {
         double proba = 0;
         String timestamp = PP_Service.getTime();
         String currentHourParity;
-        int currentHour = Integer.parseInt(timestamp.substring(0, 0));
+        int currentHour = Integer.parseInt(timestamp.substring(0, 1));
         String workingHours = foundSimulation.getHoursWorking();
     
-        if (currentHour % 2 != 0) {
+        if (currentHour % 2 == 0) {
             currentHourParity = "Even";
             if (workingHours.equals(currentHourParity)) {
                 proba = foundSimulation.getProbabilityRejection();
