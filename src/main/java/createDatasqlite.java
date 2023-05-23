@@ -10,15 +10,28 @@ import java.util.Random;
 import java.sql.ResultSet;
 import java.util.Collections;
 
-// PRE-TACHES : DEFINIR UN RANDOM SEED POUR LA CREATION DE LA BDD
+// PRE-TACHES : DEFINIR UN RANDOM SEED POUR LA CREATION DE LA BDD  -------- DONE
 // PREMIERE TACHE : REMODELER LA BDD
 // DEUXIEME TACHE : RELANCER LE ROBOT.JAVA POUR TESTER LE NOUVEAU MODELE DE DONNEES
+
+
+// NUMBER OF USE I A SHORT TIME IS THE PRIORITY
+// principal rejection : website think that the proxy is not a real human
+// More you advance in the night more its suspicious if the proxy used doesn't come from the good country
+// if a proxy never works on a website : may had been banned from it (the exploration still needs to be done at a frequency we will determine)
 
 public class createDatasqlite {
 
     public static void main(String[] args) {
         Connection conn = null;
         try {
+            // Create a new instance of the Random class
+            Random random = new Random();
+
+            // Set the seed value
+            long seed = 42;
+            random.setSeed(seed);
+
             // Load the SQLite JDBC driver
             Class.forName("org.sqlite.JDBC");
 
@@ -61,7 +74,7 @@ public class createDatasqlite {
                 String sql = "INSERT INTO Website (Id_Website, type) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
-                    int type = (int) (Math.random() * 4) + 1; // Generate a random integer between 1 and 4
+                    int type = (int) (random.nextInt(4) + 1); // Generate a random integer between 1 and 4
                     statement.setInt(2, type);
                     statement.executeUpdate();
                 }
@@ -72,7 +85,7 @@ public class createDatasqlite {
                 String sql = "INSERT INTO Proxy (Id_Proxy, type) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
-                    int type = (int) (Math.random() * 4) + 1; // Generate a random integer between 1 and 4
+                    int type = (int) (random.nextInt(4) + 1); // Generate a random integer between 1 and 4
                     statement.setInt(2, type);
                     statement.executeUpdate();
                 }
@@ -92,7 +105,7 @@ public class createDatasqlite {
                 String sql = "INSERT INTO URL (Id_URL, Id_Website) VALUES (?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, i);
-                    statement.setInt(2, (int) (Math.random() * 800) + 1);
+                    statement.setInt(2, (int) (random.nextInt(800) + 1));
                     statement.executeUpdate();
                 }
             }
@@ -116,7 +129,7 @@ public class createDatasqlite {
             // For each proxyid
             while (proxyIdResultSet.next()) {
                 int proxyId = proxyIdResultSet.getInt("Id_Proxy");
-                int randomCountryCount = (int) (Math.random() * 50) + 1; // Random number between 1 and 6
+                int randomCountryCount = (int) (random.nextInt(50) + 1); // Random number between 1 and 6
                 Collections.shuffle(countryNames); // Shuffle the list of country names
 
                 // Insert unique random country names
@@ -139,7 +152,7 @@ public class createDatasqlite {
             // For each proxyid
             while (websiteIdResultSet.next()) {
                 int websiteId = websiteIdResultSet.getInt("Id_Website");
-                int randomCountryCount = (int) (Math.random() * 50) + 1; // Random number between 1 and 6
+                int randomCountryCount = (int) (random.nextInt(50) + 1); // Random number between 1 and 50
                 Collections.shuffle(countryNames); // Shuffle the list of country names
 
                 // Insert unique random country names
@@ -204,9 +217,9 @@ public class createDatasqlite {
                     if (WebsiteType == proxyType && countryNameMatches) {
                         String sql = "INSERT INTO simulation_willRespond (Id_Website, Id_Proxy, simulation_probability, parity_feature) VALUES (?, ?, ?, ?)";
                         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                            double randomValue = Math.random();
+                            double randomValue = random.nextInt();
                             double truncatedValue = Math.floor(randomValue * 10000.0) / 10000.0;
-                            String parityString = new Random().nextBoolean() ? "Odd" : "Even";
+                            String parityString = random.nextBoolean() ? "Odd" : "Even";
                             statement.setInt(1, i);
                             statement.setInt(2, j);
                             statement.setDouble(3, truncatedValue);
