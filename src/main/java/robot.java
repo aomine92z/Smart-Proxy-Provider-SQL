@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.HashMap;
 
 public class robot {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime + (6 * 60 * 1000);
@@ -96,6 +96,11 @@ public class robot {
                 threads.add(thread);
                 thread.start();
             }
+            
+            for (Thread thread : threads) {
+                thread.join();
+            }
+            
 
             Map<String, WillRespond> willRespondFinal = new HashMap<>();
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
@@ -118,6 +123,7 @@ public class robot {
 
     }
 
+
     public static void saveData(Map<String, WillRespond> willRespondsMap) {
 
         Connection conn = null;
@@ -130,7 +136,7 @@ public class robot {
             conn = DriverManager.getConnection("jdbc:sqlite:test.db");
 
             for (Map.Entry<String, WillRespond> willRespond : willRespondsMap.entrySet()) {
-                String sql = "INSERT INTO willRespond (Id_Website, Id_Proxy, success, timestamp) VALUES (?, ?, ?, ?)";
+                String sql = "INSERT OR REPLACE INTO willRespond (Id_Website, Id_Proxy, success, timestamp) VALUES (?, ?, ?, ?)";
                 try (PreparedStatement statement = conn.prepareStatement(sql)) {
                     statement.setInt(1, willRespond.getValue().getId_Website());
                     statement.setInt(2, willRespond.getValue().getId_Proxy());

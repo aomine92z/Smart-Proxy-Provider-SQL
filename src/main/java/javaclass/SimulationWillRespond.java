@@ -84,7 +84,7 @@ public class SimulationWillRespond {
     }
 
     public String toString() {
-        return ("Id_URL: " + this.Id_website + ", Id_Proxy: " + this.Id_Proxy + ", TriedOk: "
+        return ("Id_Website: " + this.Id_website + ", Id_Proxy: " + this.Id_Proxy + ", ProbabilityRejection: "
                 + this.probabilityRejection);
     }
 }

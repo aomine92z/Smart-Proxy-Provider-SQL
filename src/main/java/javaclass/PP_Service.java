@@ -33,7 +33,7 @@ public class PP_Service {
         }
 
         public void run() {
-            this.willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
+            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
         }
 
     }
@@ -64,6 +64,7 @@ public class PP_Service {
                             "False", timestamp);
                     String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                     willresponds.put(newKey, newWillRespond);
+                    // newWillRespond.saveToDatabase();
 
                 } else {
                     System.out.println("Called proxy provider service for Website : " + url.getId_website()
@@ -73,6 +74,7 @@ public class PP_Service {
                     String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                     ;
                     willresponds.put(newKey, newWillRespond);
+                    // newWillRespond.saveToDatabase();
                 }
             } else {
                 System.out.println("No matching proxy found for Website: " + url.getId_website());

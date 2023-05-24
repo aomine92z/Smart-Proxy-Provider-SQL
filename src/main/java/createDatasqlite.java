@@ -217,7 +217,7 @@ public class createDatasqlite {
                     if (WebsiteType == proxyType && countryNameMatches) {
                         String sql = "INSERT INTO simulation_willRespond (Id_Website, Id_Proxy, simulation_probability, parity_feature) VALUES (?, ?, ?, ?)";
                         try (PreparedStatement statement = conn.prepareStatement(sql)) {
-                            double randomValue = random.nextInt();
+                            double randomValue = random.nextDouble();
                             double truncatedValue = Math.floor(randomValue * 10000.0) / 10000.0;
                             String parityString = random.nextBoolean() ? "Odd" : "Even";
                             statement.setInt(1, i);

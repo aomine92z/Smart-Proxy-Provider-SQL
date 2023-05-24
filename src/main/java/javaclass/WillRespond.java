@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.sql.PreparedStatement;
+
 
 public class WillRespond {
     private int Id_Website;
@@ -85,4 +87,37 @@ public class WillRespond {
     public String toString() {
         return ("Id_Website: " + this.Id_Website + ", Id_Proxy: " + this.Id_Proxy + ", Success: " + this.success + ", Timestamp: " + this.timestamp);
     }
+
+    // public void saveToDatabase() {
+    //     Connection conn = null;
+    //     PreparedStatement pstmt = null;
+    
+    //     try {
+    //         conn = DriverManager.getConnection("jdbc:sqlite:test.db");
+            
+    //         String sql = "INSERT INTO willRespond (Id_Website, Id_Proxy, success, timestamp) VALUES (?, ?, ?, ?)";
+    //         pstmt = conn.prepareStatement(sql);
+            
+    //         pstmt.setInt(1, this.Id_Website);
+    //         pstmt.setInt(2, this.Id_Proxy);
+    //         pstmt.setString(3, this.success);
+    //         pstmt.setString(4, this.timestamp);
+    
+    //         pstmt.executeUpdate();
+    //     } catch (SQLException e) {
+    //         e.printStackTrace();
+    //     } finally {
+    //         try {
+    //             if (pstmt != null) {
+    //                 pstmt.close();
+    //             }
+    //             if (conn != null) {
+    //                 conn.close();
+    //             }
+    //         } catch (SQLException e) {
+    //             e.printStackTrace();
+    //         }
+    //     }
+    // }
+    
 }
