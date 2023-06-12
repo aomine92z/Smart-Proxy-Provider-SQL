@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javaclass.URL;
 import javaclass.Website;
@@ -20,11 +21,19 @@ import java.util.HashMap;
 
 public class robot {
     public static void main(String[] args) throws Exception {
+        // Create a new instance of the Random class
+        Random random = new Random();
+
+        // Set the seed value
+        long seed = 52;
+
+        random.setSeed(seed);
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime + (6 * 60 * 1000);
 
         while (System.currentTimeMillis() < endTime) {
+
 
             // Recevoir le timestamp actuel
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -51,7 +60,7 @@ public class robot {
             // for (int i = 0; i < 10; i++) {
             // System.out.println(proxies.get(i).toString());
             // }
-            Collections.shuffle(urls);
+            Collections.shuffle(urls, random);
             // for (int i = 0; i < 10; i++) {
             // System.out.println(urls.get(i).toString());
             // }
@@ -72,15 +81,15 @@ public class robot {
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random));
 
             List<Thread> threads = new ArrayList<>();
 

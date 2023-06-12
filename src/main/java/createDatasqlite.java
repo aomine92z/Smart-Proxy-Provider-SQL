@@ -62,11 +62,11 @@ public class createDatasqlite {
             
             // Create the willRespond table
             stmt.executeUpdate(
-                    "CREATE TABLE willRespond(Id_Website INTEGER, Id_Proxy INTEGER, success VARCHAR(50), timestamp VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy, timestamp), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
+                    "CREATE TABLE willRespond(Id_Website INTEGER, Id_Proxy INTEGER, success VARCHAR(50), timestamp VARCHAR(50), success1 VARCHAR(50), success2 VARCHAR(50), success3 VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy, timestamp), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
 
             // Create the simulation_willRespond table
             stmt.executeUpdate(
-                    "CREATE TABLE simulation_willRespond(Id_Website INTEGER, Id_Proxy INTEGER, simulation_probability DOUBLE, parity_feature VARCHAR(50), PRIMARY KEY(Id_Website, Id_Proxy), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
+                    "CREATE TABLE simulation_willRespond(Id_Website INTEGER, Id_Proxy INTEGER, simulation_probability DOUBLE, parity_feature VARCHAR(50), max_try INTEGER, nbr_try INTEGER, PRIMARY KEY(Id_Website, Id_Proxy), FOREIGN KEY(Id_Website) REFERENCES URL(Id_Website), FOREIGN KEY(Id_Proxy) REFERENCES Proxy(Id_Proxy))");
 
             System.out.println("Database schema created successfully.");
             // Insert data into the Website table
@@ -215,7 +215,7 @@ public class createDatasqlite {
                     // Only insert a record if the URL and proxy types match, and the country_name
                     // matches
                     if (WebsiteType == proxyType && countryNameMatches) {
-                        String sql = "INSERT INTO simulation_willRespond (Id_Website, Id_Proxy, simulation_probability, parity_feature) VALUES (?, ?, ?, ?)";
+                        String sql = "INSERT INTO simulation_willRespond (Id_Website, Id_Proxy, simulation_probability, parity_feature, max_try, nbr_try) VALUES (?, ?, ?, ?, ?, ?)";
                         try (PreparedStatement statement = conn.prepareStatement(sql)) {
                             double randomValue = random.nextDouble();
                             double truncatedValue = Math.floor(randomValue * 10000.0) / 10000.0;
@@ -224,6 +224,9 @@ public class createDatasqlite {
                             statement.setInt(2, j);
                             statement.setDouble(3, truncatedValue);
                             statement.setString(4, parityString);
+                            int max_try = (int) (random.nextInt(20000) + 1); // Generate a random integer between 1 and 4
+                            statement.setInt(5, max_try);
+                            statement.setInt(6, 0);
                             statement.executeUpdate();
                         }
                     }

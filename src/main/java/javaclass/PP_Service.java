@@ -14,14 +14,18 @@ public class PP_Service {
         private Map<String, WillRespond> willresponds;
         private Map<String, SimulationWillRespond> simuwillresponds;
         private static long startTime;
+        private int nbtry;
+        private Random random;
 
         public ServiceRunner(List<URL> URL_pack, List<Proxy> proxies, Map<String, WillRespond> willresponds,
-                Map<String, SimulationWillRespond> simuwillresponds, long startTime) {
+                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random) {
             this.URL_pack = URL_pack;
             this.proxies = proxies;
             this.willresponds = willresponds;
             this.simuwillresponds = simuwillresponds;
             ServiceRunner.startTime = startTime;
+            this.nbtry = nbtry;
+            this.random = random;
         }
 
         public static long getStartTime() {
@@ -33,55 +37,63 @@ public class PP_Service {
         }
 
         public void run() {
-            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds);
+            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random);
         }
 
     }
 
     private static Map<String, WillRespond> callProxyProvider(List<URL> URL_pack, List<Proxy> proxies,
-            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds) {
+            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random) {
         // call the service with the given arguments
+        List<URL> URL_next_pack = new ArrayList<>();
 
-        for (URL url : URL_pack) {
-            Proxy matchingProxy = findMatchingProxy(url, proxies);
+        if (URL_pack.size() > 0 && nbtry < 6){
 
-            if (matchingProxy != null) {
+            for (URL url : URL_pack) {
 
-                String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
+                Proxy matchingProxy = findMatchingProxy(url, proxies, random);
 
-                SimulationWillRespond foundSimulation = simuwillresponds.get(key);
-                System.out.println(foundSimulation);
-                Map<String, Object> ProbaTimeStamp = getProba(foundSimulation);
-                double proba = (double) ProbaTimeStamp.get("proba");
-                String timestamp = (String) ProbaTimeStamp.get("timestamp");
-                String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+                if (matchingProxy != null) {
 
-                // Choice of proxy working
-                if (Math.random() > proba) {
-                    System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
-                            + " using Proxy : " + matchingProxy.getId_Proxy());
-                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
-                            "False", timestamp);
-                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
-                    willresponds.put(newKey, newWillRespond);
-                    // newWillRespond.saveToDatabase();
+                    String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
+                    SimulationWillRespond foundSimulation = simuwillresponds.get(key);
+                    System.out.println(foundSimulation);
+                    Map<String, Object> ProbaTimeStamp = getProba(foundSimulation);
+                    double proba = (double) ProbaTimeStamp.get("proba");
+                    String timestamp = (String) ProbaTimeStamp.get("timestamp");
+                    String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+
+                    // Choice of proxy working
+                    if (random.nextDouble() > proba) {
+                        System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
+                                + " using Proxy : " + matchingProxy.getId_Proxy());
+                        WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                                "False", timestamp);
+                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
+                        willresponds.put(newKey, newWillRespond);
+
+                        URL_next_pack.add(url);
+                        // newWillRespond.saveToDatabase();
+
+                    } else {
+                        System.out.println("Called proxy provider service for Website : " + url.getId_website()
+                                + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
+                        WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
+                                "True", timestamp);
+                        String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
+                        ;
+                        willresponds.put(newKey, newWillRespond);
+                        // newWillRespond.saveToDatabase();
+                    }
                 } else {
-                    System.out.println("Called proxy provider service for Website : " + url.getId_website()
-                            + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
-                    WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
-                            "True", timestamp);
-                    String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
-                    ;
-                    willresponds.put(newKey, newWillRespond);
-                    // newWillRespond.saveToDatabase();
+                    System.out.println("No matching proxy found for Website: " + url.getId_website());
                 }
-            } else {
-                System.out.println("No matching proxy found for Website: " + url.getId_website());
             }
-
+            return callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random);
+        } else {
+            return willresponds;
         }
-        return willresponds;
     }
 
     // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies) {
@@ -96,7 +108,7 @@ public class PP_Service {
     // return null;
     // }
 
-    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies) {
+    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random) {
         List<Proxy> matchingProxies = new ArrayList<>();
 
         for (Proxy proxy : proxies) {
@@ -118,8 +130,6 @@ public class PP_Service {
         // on sélectionne le "meilleur" proxy et on le retourne
         // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
         // obtenue
-
-        Random random = new Random();
         int randomIndex = random.nextInt(matchingProxies.size());
         return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
     }

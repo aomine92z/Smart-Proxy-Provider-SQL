@@ -15,12 +15,16 @@ public class WillRespond {
     private int Id_Proxy;
     private String success;
     private String timestamp;
+    private String success1;
+    private String success2;
 
-    public WillRespond(int Id_Website, int Id_Proxy, String success, String timestamp) {
+    public WillRespond(int Id_Website, int Id_Proxy, String success, String timestamp, String success1, String success2) {
         this.Id_Website = Id_Website;
         this.Id_Proxy = Id_Proxy;
         this.success = success;
         this.timestamp = timestamp;
+        this.success1 = success1;
+        this.success2 = success2;
     }
 
     public int getId_Website(){
@@ -37,6 +41,14 @@ public class WillRespond {
 
     public String get_Timestamp(){
         return this.timestamp;
+    }
+
+    public String get_Success1(){
+        return this.success;
+    }
+
+    public String get_Success2(){
+        return this.success;
     }
 
     public static Map<String, WillRespond> load_willRespond() {
