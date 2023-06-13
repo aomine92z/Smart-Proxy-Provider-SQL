@@ -52,6 +52,7 @@ public class robot {
             List<URL> urls = URL.load_URLs(websites);
             List<Proxy> proxies = Proxy.load_Proxies();
             Map<String, WillRespond> willresponds = WillRespond.load_willRespond();
+            Map<String, WillRespond> CurrentWillResponds = new HashMap<>();
             Map<String, SimulationWillRespond> simuwillresponds = SimulationWillRespond.load_simulationWillRespond();
 
             // for (int i = 0; i < willresponds.size(); i++) {
@@ -81,15 +82,15 @@ public class robot {
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random));
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random, CurrentWillResponds));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random));
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random, CurrentWillResponds));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random));
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random, CurrentWillResponds));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random));
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random, CurrentWillResponds));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random));
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random, CurrentWillResponds));
 
             List<Thread> threads = new ArrayList<>();
 

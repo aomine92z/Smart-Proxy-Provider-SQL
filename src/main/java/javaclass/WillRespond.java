@@ -70,7 +70,7 @@ public class WillRespond {
             // Parcours du ResultSet et instanciation d'un objet URL pour chaque
             // enregistrement
             while (rs.next()) {
-                WillRespond willrespond = new WillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"), rs.getString("success"), rs.getString("timestamp"));
+                WillRespond willrespond = new WillRespond(rs.getInt("Id_Website"), rs.getInt("Id_Proxy"), rs.getString("success"), rs.getString("timestamp"), rs.getString("success1"), rs.getString("success2"));
                 String key = willrespond.getId_Website() + "-" + willrespond.getId_Proxy() + "-" + willrespond.get_Timestamp();
                 willrespondsMap.put(key, willrespond);
             }

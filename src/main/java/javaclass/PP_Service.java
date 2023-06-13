@@ -1,6 +1,7 @@
 package javaclass;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,9 +17,10 @@ public class PP_Service {
         private static long startTime;
         private int nbtry;
         private Random random;
+        private Map<String, WillRespond> CurrentWillRespond;
 
         public ServiceRunner(List<URL> URL_pack, List<Proxy> proxies, Map<String, WillRespond> willresponds,
-                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random) {
+                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random, Map<String, WillRespond> CurrentWillRespond) {
             this.URL_pack = URL_pack;
             this.proxies = proxies;
             this.willresponds = willresponds;
@@ -26,6 +28,7 @@ public class PP_Service {
             ServiceRunner.startTime = startTime;
             this.nbtry = nbtry;
             this.random = random;
+            this.CurrentWillRespond = CurrentWillRespond;
         }
 
         public static long getStartTime() {
@@ -37,24 +40,26 @@ public class PP_Service {
         }
 
         public void run() {
-            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random);
+            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random, CurrentWillRespond);
         }
 
     }
 
     private static Map<String, WillRespond> callProxyProvider(List<URL> URL_pack, List<Proxy> proxies,
-            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random) {
+            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random, Map<String, WillRespond> CurrentWillRespondMap) {
         // call the service with the given arguments
         List<URL> URL_next_pack = new ArrayList<>();
 
         if (URL_pack.size() > 0 && nbtry < 6){
 
             for (URL url : URL_pack) {
+                String success1 = "False";
+                String success2 = "False";
 
                 Proxy matchingProxy = findMatchingProxy(url, proxies, random);
 
                 if (matchingProxy != null) {
-
+                    
                     String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
                     SimulationWillRespond foundSimulation = simuwillresponds.get(key);
@@ -64,12 +69,19 @@ public class PP_Service {
                     String timestamp = (String) ProbaTimeStamp.get("timestamp");
                     String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
 
+                    WillRespond previousWR = findClosestWR(url.getId_website(), matchingProxy.getId_Proxy(), CurrentWillRespondMap);
+
+                    if (previousWR != null){
+                        success1 = previousWR.get_Success();
+                        success2 = previousWR.get_Success1();
+                    }
+
                     // Choice of proxy working
                     if (random.nextDouble() > proba) {
                         System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
                                 + " using Proxy : " + matchingProxy.getId_Proxy());
                         WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
-                                "False", timestamp);
+                                "False", timestamp, success1, success2);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                         willresponds.put(newKey, newWillRespond);
 
@@ -80,7 +92,7 @@ public class PP_Service {
                         System.out.println("Called proxy provider service for Website : " + url.getId_website()
                                 + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
                         WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
-                                "True", timestamp);
+                                "True", timestamp, success1, success2);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                         ;
                         willresponds.put(newKey, newWillRespond);
@@ -90,10 +102,9 @@ public class PP_Service {
                     System.out.println("No matching proxy found for Website: " + url.getId_website());
                 }
             }
-            return callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random);
-        } else {
-            return willresponds;
+            callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random, CurrentWillRespondMap);
         }
+        return willresponds;
     }
 
     // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies) {
@@ -146,9 +157,49 @@ public class PP_Service {
 
         // Format the time units with leading zeros if necessary
         String time = String.format("%d:%02d:%02d", minutes, seconds, centiseconds);
-
         return time;
     }
+
+
+
+    private static WillRespond findClosestWR(int id_website, int id_proxy, Map<String, WillRespond> C_willresponds) {
+    
+        String keySearched = id_website + "-" + id_proxy;
+        Map<String, WillRespond> listWR = new HashMap<>();
+
+        for (String key : C_willresponds.keySet()) {
+            if (key.contains(keySearched)) {
+                listWR.put(key, C_willresponds.get(key));
+            }
+        }
+
+        // Create a map to associate WillRespond objects with their computation scores
+        Map<WillRespond, Integer> computationScores = new HashMap<>();
+
+        for (Map.Entry<String, WillRespond> entry : listWR.entrySet()) {
+            String timestamp = entry.getValue().get_Timestamp();
+
+            String[] parts = timestamp.split(":"); // Divisez la chaîne en parties (heure, minutes, secondes)
+
+            int heure = Integer.parseInt(parts[0]);
+            int minutes = Integer.parseInt(parts[1]);
+            int secondes = Integer.parseInt(parts[2]);
+
+            int computation = heure * 100 + minutes * 10 + secondes;
+
+            // Associate the computation score with the WillRespond object in the map
+            computationScores.put(entry.getValue(), computation);
+        }
+
+        // Convert the entry set of the map to a list
+        List<Map.Entry<WillRespond, Integer>> sortedList = new ArrayList<>(computationScores.entrySet());
+
+        // Sort the list based on the computation scores in descending order
+        sortedList.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
+
+        return sortedList.get(0).getKey();
+    }
+
 
     // private boolean getAttempt() {
 
