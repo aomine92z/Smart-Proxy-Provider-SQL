@@ -1,5 +1,6 @@
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import javaclass.URL;
 import javaclass.Website;
@@ -17,14 +18,31 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class robot {
     public static void main(String[] args) throws Exception {
+        // Create a new instance of the Random class
+        Random random = new Random();
+
+        // Set the seed value
+        long seed = 52;
+
+        random.setSeed(seed);
 
         long startTime = System.currentTimeMillis();
         long endTime = startTime + (6 * 60 * 1000);
+        AtomicInteger globaltried = new AtomicInteger(0);
 
         while (System.currentTimeMillis() < endTime) {
+
+            AtomicInteger localtried1 = new AtomicInteger(0);
+            AtomicInteger localtried2 = new AtomicInteger(0);
+            AtomicInteger localtried3 = new AtomicInteger(0);
+            AtomicInteger localtried4 = new AtomicInteger(0);
+            AtomicInteger localtried5 = new AtomicInteger(0);
+ 
+
 
             // Recevoir le timestamp actuel
             long elapsedTime = System.currentTimeMillis() - startTime;
@@ -51,7 +69,7 @@ public class robot {
             // for (int i = 0; i < 10; i++) {
             // System.out.println(proxies.get(i).toString());
             // }
-            Collections.shuffle(urls);
+            Collections.shuffle(urls, random);
             // for (int i = 0; i < 10; i++) {
             // System.out.println(urls.get(i).toString());
             // }
@@ -72,15 +90,15 @@ public class robot {
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried1));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried2));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried3));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried4));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime));
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried5));
 
             List<Thread> threads = new ArrayList<>();
 
@@ -97,10 +115,24 @@ public class robot {
                 thread.start();
             }
             
+            // for (Thread thread : threads) {
+            //     thread.join();
+            // }
+            
             for (Thread thread : threads) {
                 thread.join();
-            }
+                }
             
+            for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
+                // System.out.println("localtried: " + serviceRunner.getLocalTriedResult());
+                System.out.println("localtried: " + serviceRunner.getLocalTried());
+                globaltried.addAndGet(serviceRunner.getLocalTried().get()); 
+            }
+
+            // System.out.println("localtried: " + localtried);
+            // globaltried += localtried;
+        
+            System.out.println("globaltried: " + globaltried);
 
             Map<String, WillRespond> willRespondFinal = new HashMap<>();
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
@@ -120,9 +152,10 @@ public class robot {
 
             Thread.sleep(60000);
         }
+        
 
     }
-
+    
 
     public static void saveData(Map<String, WillRespond> willRespondsMap) {
 
