@@ -1,0 +1,3372 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.93.0"/>
+		<Timestamp>2023-06-14T13:26:19Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="Success" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+		<DataField name="Id_Website" optype="continuous" dataType="float"/>
+		<DataField name="Id_proxy" optype="continuous" dataType="float"/>
+		<DataField name="time_elapsed" optype="continuous" dataType="float"/>
+	</DataDictionary>
+	<MiningModel functionName="classification" algorithmName="sklearn.ensemble._gb.GradientBoostingClassifier">
+		<MiningSchema>
+			<MiningField name="Success" usageType="target"/>
+			<MiningField name="Id_Website"/>
+			<MiningField name="Id_proxy"/>
+			<MiningField name="time_elapsed"/>
+		</MiningSchema>
+		<Segmentation multipleModelMethod="modelChain" missingPredictionTreatment="returnMissing">
+			<Segment id="1">
+				<True/>
+				<MiningModel functionName="regression">
+					<MiningSchema>
+						<MiningField name="Id_proxy"/>
+						<MiningField name="Id_Website"/>
+						<MiningField name="time_elapsed"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="decisionFunction(1)" optype="continuous" dataType="double" isFinalResult="false"/>
+						<OutputField name="sigmoid(decisionFunction(1))" optype="continuous" dataType="double" feature="transformedValue" isFinalResult="false">
+							<Apply function="/">
+								<Constant dataType="double">1.0</Constant>
+								<Apply function="+">
+									<Constant dataType="double">1.0</Constant>
+									<Apply function="exp">
+										<Apply function="*">
+											<Constant dataType="double">-1.0</Constant>
+											<FieldRef field="decisionFunction(1)"/>
+										</Apply>
+									</Apply>
+								</Apply>
+							</Apply>
+						</OutputField>
+					</Output>
+					<Targets>
+						<Target rescaleConstant="-1.0389851731688002" rescaleFactor="0.1"/>
+					</Targets>
+					<LocalTransformations>
+						<DerivedField name="double(Id_proxy)" optype="continuous" dataType="double">
+							<FieldRef field="Id_proxy"/>
+						</DerivedField>
+						<DerivedField name="double(Id_Website)" optype="continuous" dataType="double">
+							<FieldRef field="Id_Website"/>
+						</DerivedField>
+						<DerivedField name="double(time_elapsed)" optype="continuous" dataType="double">
+							<FieldRef field="time_elapsed"/>
+						</DerivedField>
+					</LocalTransformations>
+					<Segmentation multipleModelMethod="sum" missingPredictionTreatment="returnMissing">
+						<Segment id="1">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.3340968536702119">
+									<True/>
+									<Node score="3.8263473053892216">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="0.13023252624389337">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											<Node score="-0.5202244546558548">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="0.5298813005729681">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										</Node>
+									</Node>
+									<Node score="1.2362668730335937">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										<Node score="-1.0300535052775806">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1423784219868807">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="293.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="2">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.21406850799021226">
+									<True/>
+									<Node score="2.927744068127569">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="0.11644660104675794">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											<Node score="-0.48088816626025455">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="0.4645875360584653">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										</Node>
+									</Node>
+									<Node score="1.0486486993599755">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										<Node score="-0.9784217027777659">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.9103426202843119">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="354.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="3">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.274156455844792">
+									<True/>
+									<Node score="0.6288292648818837">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="-0.9359724362425348">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											<Node score="0.022262979322393912">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="759.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3908082339722505">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="26.5"/>
+										</Node>
+									</Node>
+									<Node score="0.9021896661940355">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										<Node score="-0.9304033873452092">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.0531135752353569">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="293.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="4">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.9065591441785177">
+									<True/>
+									<Node score="-0.10177559442075183">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="180.5"/>
+										<Node score="2.236726743138407">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="55.5"/>
+											<Node score="0.15753948346448285">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.062378570212296">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="114.0"/>
+										</Node>
+									</Node>
+									<Node score="0.6005303519166595">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="50.0"/>
+										<Node score="-0.18806480692938826">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+										</Node>
+									</Node>
+									<Node score="4.177216150991318">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="197.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="5">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.1652385234225505">
+									<True/>
+									<Node score="2.2720631044922652">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="0.3745755926503235">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											<Node score="-0.21269146167096994">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="210.5"/>
+											</Node>
+										</Node>
+										<Node score="0.34105755024167955">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										</Node>
+									</Node>
+									<Node score="0.7794025480781959">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										<Node score="-0.882002678187471">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.8197007898768293">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="354.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="6">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="3.700507947271539">
+									<True/>
+									<Node score="-0.4072200669454822">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="289.0"/>
+										<Node score="0.3763750950830032">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-0.06468574699262239">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											</Node>
+										</Node>
+										<Node score="0.3400428400515511">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										</Node>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="7">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="3.2082680023819377">
+									<True/>
+									<Node score="-0.3578933192334044">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="0.30616654923135167">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+											<Node score="-1.277500576250124">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.1426218660158924">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="233.0"/>
+										</Node>
+									</Node>
+									<Node score="1.7884061597955467">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+										<Node score="0.4742713350712195">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="174.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.18915740309012133">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="8">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.689462810057403">
+									<True/>
+									<Node score="-0.32844206782970053">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="0.2718025993511426">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+											<Node score="-1.244879335263883">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.0998958298560975">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="233.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.01739498519015058">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="432.5"/>
+										<Node score="2.6957596203659002">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="81.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.10721360982790974">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="278.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="9">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.12481959544222701">
+									<True/>
+									<Node score="2.543309598187538">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+										<Node score="-1.2311948700025077">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+											<Node score="0.6027721745451412">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.0"/>
+											</Node>
+										</Node>
+										<Node score="0.6681702947967716">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="51.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.4478088786867729">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="0.05446070008025309">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										</Node>
+									</Node>
+									<Node score="0.6906747533491288">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="10">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="2.41364908301597">
+									<True/>
+									<Node score="-0.057443477937475285">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="180.5"/>
+										<Node score="2.404354754899332">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="49.0"/>
+											<Node score="0.10557495268477446">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+											</Node>
+										</Node>
+										<Node score="-0.9621534111252726">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="114.0"/>
+										</Node>
+									</Node>
+									<Node score="1.1070980544985214">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="578.5"/>
+										<Node score="-0.0310219772992484">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="365.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.32473589759216065">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="11">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.25136921051357636">
+									<True/>
+									<Node score="1.9183404976392235">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="-0.933363703082574">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="0.05616406687125409">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="759.0"/>
+											</Node>
+										</Node>
+										<Node score="0.21232359543149681">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="767.0"/>
+										</Node>
+									</Node>
+									<Node score="0.14312586814891853">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+										<Node score="3.4871221413635975">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="39.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2903373081198655">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="12">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.0077243833803008755">
+									<True/>
+									<Node score="-1.330587324166558">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="6.0"/>
+										<Node score="-1.2437121268420674">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="161.5"/>
+										</Node>
+										<Node score="-1.312375712006358">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="16.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.332262295615626">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.1690638367147925">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+										</Node>
+									</Node>
+									<Node score="3.5973528405186252">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="13">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.7247813721095444">
+									<True/>
+									<Node score="-1.5115312613471">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="4.619214904014849">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+											<Node score="0.0014912066819573258">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3128297438245333">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="788.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2802433195172263">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="28.5"/>
+										<Node score="1.6714559431137852">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="76.0"/>
+										</Node>
+									</Node>
+									<Node score="1.8674324971025693">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="269.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="14">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.4146081530128496">
+									<True/>
+									<Node score="-1.3437078885519393">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.833021853777519">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-1.0641869996820392">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="2.209941051548018">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="255.0"/>
+										</Node>
+									</Node>
+									<Node score="2.1017189924788924">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="49.0"/>
+										<Node score="0.2345473815609001">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.06626262438983933">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="256.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="15">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="2.0166667474324016">
+									<True/>
+									<Node score="0.44793797496634363">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.1429145975692992">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="-0.4237542434176643">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="1.5162999286090544">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="311.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.9355037030563111">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+										<Node score="-0.07601464365216057">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="596.5"/>
+										</Node>
+									</Node>
+									<Node score="0.3886822604532704">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="16">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.03331043597049696">
+									<True/>
+									<Node score="-0.27895715613346933">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="0.12363876360910746">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+											<Node score="4.523810523514258">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.225786322588081">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="225.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.1410573710903984">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="432.5"/>
+										<Node score="2.069100408697067">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="81.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.4273247441904764">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="444.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="17">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.025507823646843373">
+									<True/>
+									<Node score="-1.231245653068593">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.14508839046695">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+											<Node score="-1.1635980822458578">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="152.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.4086249360087133">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="70.0"/>
+										</Node>
+									</Node>
+									<Node score="2.937267123472018">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="2.658427180481844">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="134.0"/>
+										</Node>
+									</Node>
+									<Node score="0.6128098350093366">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="18">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="2.0481395902376764">
+									<True/>
+									<Node score="-0.05722784291525636">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="180.5"/>
+										<Node score="0.9615268259806571">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+											<Node score="-0.7781368777476528">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="290.5"/>
+											</Node>
+										</Node>
+										<Node score="-0.6742003576833671">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="13.5"/>
+										</Node>
+									</Node>
+									<Node score="2.860306503812729">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="578.5"/>
+										<Node score="0.22127015556214102">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="548.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.35304541727773797">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="19">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.20442166156515415">
+									<True/>
+									<Node score="1.925772468577244">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.7116874096299254">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-1.0239892836101065">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.4552570739368422">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="52.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.32092124656226395">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+										<Node score="0.8690258352382844">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="104.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.13927668986903102">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="128.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="20">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.01957877310935235">
+									<True/>
+									<Node score="-1.2781050594524208">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="6.0"/>
+										<Node score="-1.230814257988486">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="386.0"/>
+											<Node score="-1.2583472748458164">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="4.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.290437215633301">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="2.0"/>
+										</Node>
+									</Node>
+									<Node score="0.9634396742905902">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+										<Node score="-0.34008786991900114">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.37548452649660735">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="21">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.8600058169380895">
+									<True/>
+									<Node score="0.8575840734928253">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="-0.884961561497938">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="0.05167862342090389">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="759.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.4492046952326987">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="26.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.8794578431352459">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+										<Node score="-0.06503521284217072">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="596.5"/>
+										</Node>
+									</Node>
+									<Node score="0.3621964479154451">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="22">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.023406856778975502">
+									<True/>
+									<Node score="-1.194778815528207">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.1296568286545978">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+											<Node score="-1.1371246179033423">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="58.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3665131431434485">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="70.0"/>
+										</Node>
+									</Node>
+									<Node score="2.5579492336312732">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="2.3501149204585787">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="134.0"/>
+										</Node>
+									</Node>
+									<Node score="0.5422227064081855">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="23">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.01362095985998001">
+									<True/>
+									<Node score="1.5924480518903366">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.6441860814082524">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-0.9770357019655492">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3601273018356486">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="52.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.2875374348752566">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+										<Node score="0.7524238705662474">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="104.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.7423848107389025">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="24">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.7355839630795653">
+									<True/>
+									<Node score="-0.01871746645308585">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="289.0"/>
+										<Node score="2.7866489327684274">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+											<Node score="0.01884918122732557">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="636.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3842921162731554">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+										</Node>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="25">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.09730958153695496">
+									<True/>
+									<Node score="-1.2433720287764847">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="6.0"/>
+										<Node score="-1.2277505699339053">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="386.0"/>
+											<Node score="-1.214754957755949">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="161.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.2568309013552168">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.38424836989725236">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="360.5"/>
+										<Node score="0.14200315179088957">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										</Node>
+									</Node>
+									<Node score="0.4617244994043792">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="26">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.00848832580306066">
+									<True/>
+									<Node score="-1.1178453093750642">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.325326858987707">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-1.175885652673871">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="24.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.1245397571672135">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="152.0"/>
+										</Node>
+									</Node>
+									<Node score="2.048888354939601">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="2.1854567103902425">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="7.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.28004599167075">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="21.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="27">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.845093265695091">
+									<True/>
+									<Node score="-1.3189554854686785">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="180.5"/>
+										<Node score="2.0067066551719797">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="131.5"/>
+											<Node score="-0.06187116719395808">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="128.5"/>
+											</Node>
+										</Node>
+										<Node score="1.9527358785747269">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="46.5"/>
+										</Node>
+									</Node>
+									<Node score="1.7105553049183262">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="484.0"/>
+										<Node score="0.0641606988831801">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="454.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.30491751489355046">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="28">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.757597831971608">
+									<True/>
+									<Node score="0.24776217409511864">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.1216865824009168">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="-0.38248718719897756">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="1.292277844547575">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="311.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.8223666372367673">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+										<Node score="-0.0628490505442473">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="596.5"/>
+										</Node>
+									</Node>
+									<Node score="0.3404077410454236">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="29">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.0021585177143947335">
+									<True/>
+									<Node score="-1.2124338961713996">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="6.0"/>
+										<Node score="-1.2008232254692948">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="386.0"/>
+											<Node score="-1.1879919159807755">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="161.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.2280500633441676">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="2.0"/>
+										</Node>
+									</Node>
+									<Node score="1.715908667307703">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="-0.3337853995315814">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.9471382464161849">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="30">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.0021260042649927486">
+									<True/>
+									<Node score="-1.4085044528108455">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="-0.9790856678546533">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="0.1312345274497085">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+											</Node>
+										</Node>
+										<Node score="1.5198630174352306">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="255.0"/>
+										</Node>
+									</Node>
+									<Node score="0.7509260671921258">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="55.5"/>
+										<Node score="-0.25614580977904056">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.3746503531998928">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="67.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="31">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.6487349339973314">
+									<True/>
+									<Node score="4.297129713755795">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="762.5"/>
+										<Node score="-0.15081480008528908">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+											<Node score="0.12583648329994251">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+											</Node>
+										</Node>
+										<Node score="0.6621835736467582">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="44.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.2853724479356745">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.021249105116599394">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.3201730893898231">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="32">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.08893380283902697">
+									<True/>
+									<Node score="0.3956092079833618">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										<Node score="-0.1279487485849593">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+											<Node score="4.078248147123548">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+											</Node>
+										</Node>
+										<Node score="2.663636375052792">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="136.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.7639701023786503">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="263.5"/>
+										<Node score="1.4230636369458782">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="20.5"/>
+										</Node>
+									</Node>
+									<Node score="0.2774501048648339">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="17.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="33">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.028192771203406432">
+									<True/>
+									<Node score="1.2666593199559046">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.5331886072891239">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-0.9217305321170903">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3751451040429867">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="52.0"/>
+										</Node>
+									</Node>
+									<Node score="1.763087059460246">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="49.0"/>
+										<Node score="0.12019692783416366">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.40634048091576314">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="34">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.03333837199570767">
+									<True/>
+									<Node score="4.114828341133351">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="36.5"/>
+										<Node score="0.7138690573554746">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+											<Node score="-0.4258517609313793">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="671.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="0.3800441360966755">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										<Node score="2.6552709132397783">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.6721193413475283">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="35">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.044604155521918834">
+									<True/>
+									<Node score="1.0706174128822044">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+										<Node score="-0.6268414203200564">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="636.0"/>
+											<Node score="0.04965591438807611">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+											</Node>
+										</Node>
+										<Node score="3.493273532754819">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="89.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2489971072998785">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+										<Node score="-1.346083634826725">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="30.0"/>
+										</Node>
+									</Node>
+									<Node score="3.0340812859443487">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="13.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="36">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.8455158680204301">
+									<True/>
+									<Node score="-1.0126232190372244">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="88.5"/>
+										<Node score="0.19751272434355904">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="81.5"/>
+											<Node score="-0.2058628475942711">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="360.5"/>
+											</Node>
+										</Node>
+										<Node score="1.1483909446874168">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="195.0"/>
+										</Node>
+									</Node>
+									<Node score="1.8614025375371894">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="54.5"/>
+										<Node score="0.1049786255848527">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="53.5"/>
+										</Node>
+									</Node>
+									<Node score="4.787364261675219">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="90.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="37">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.009118847214052742">
+									<True/>
+									<Node score="-1.3356002281366317">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										<Node score="0.03965728942745608">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="186.5"/>
+											<Node score="3.272761805525916">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+											</Node>
+										</Node>
+										<Node score="1.8033863527242133">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="275.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.39458422859984804">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="233.0"/>
+										<Node score="-1.2076828358931475">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.0"/>
+										</Node>
+									</Node>
+									<Node score="6.3227463225410325">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="234.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="38">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.024975326337838274">
+									<True/>
+									<Node score="-1.4228875733385615">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.5265622345839094">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-0.8999692482045027">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="1.169992494854356">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="255.0"/>
+										</Node>
+									</Node>
+									<Node score="1.8774818132359297">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+										<Node score="0.0413389712292018">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="636.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.2843837793906643">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="39">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.560688179236632">
+									<True/>
+									<Node score="0.43282014704745864">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="762.5"/>
+										<Node score="-0.13432770868753238">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+											<Node score="0.11218938651636502">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+											</Node>
+										</Node>
+										<Node score="3.279591947931206">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.251505804610619">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="-0.025993482225479852">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2860105035722336">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="40">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.031010981412802188">
+									<True/>
+									<Node score="3.034367793456189">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="36.5"/>
+										<Node score="0.9726028210438534">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+											<Node score="-0.33988029195824615">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="753.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="0.35129257808817804">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										<Node score="2.2001529103008783">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.6079705937954418">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="41">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.020320321330884846">
+									<True/>
+									<Node score="-1.0889962982516932">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.3105318680698306">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-1.1650392317396667">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="24.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.103884494961247">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="152.0"/>
+										</Node>
+									</Node>
+									<Node score="1.9172259997939862">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="1.8191609210689643">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.5"/>
+										</Node>
+									</Node>
+									<Node score="0.4676446325928814">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="42">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.0037840218608257196">
+									<True/>
+									<Node score="-1.4393043328310873">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="0.4553444319463058">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="-0.8689726959872722">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="276.0"/>
+											</Node>
+										</Node>
+										<Node score="1.0553407322183224">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="769.0"/>
+										</Node>
+									</Node>
+									<Node score="0.18813107980679147">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="55.5"/>
+										<Node score="2.0819903583480373">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="12.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2989790174429898">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="67.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="43">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="1.2109043252470602">
+									<True/>
+									<Node score="2.8473420651227195">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										<Node score="-0.08281914212247043">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											<Node score="0.07841370404844693">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.3828985211061398">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="-1.222985825923482">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="788.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2641946542288143">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="44">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.02287512035407146">
+									<True/>
+									<Node score="2.502117270959459">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="-1.0177495304499493">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="658.0"/>
+											<Node score="0.8871112882895358">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="169.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="1.9634653494577814">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="22.5"/>
+										<Node score="-0.5069794865613878">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="35.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.3800169503028172">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="34.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="45">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.476948536474446">
+									<True/>
+									<Node score="-1.3016567609840068">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="289.0"/>
+										<Node score="0.765058496543021">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="286.5"/>
+											<Node score="-0.008365337584820345">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.4195928411215821">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="122.0"/>
+										</Node>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="46">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.004995692704822543">
+									<True/>
+									<Node score="1.4794543339274664">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+										<Node score="-1.13684951526436">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="472.0"/>
+											<Node score="0.038775843105388313">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.2873613153924315">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="62.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.01379214464287136">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="554.5"/>
+										<Node score="-1.0119943243345286">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="45.5"/>
+										</Node>
+									</Node>
+									<Node score="2.4566650211538326">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="558.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="47">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.04756990436809208">
+									<True/>
+									<Node score="-0.18973146760044937">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+										<Node score="-0.41952497180634873">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="587.5"/>
+											<Node score="0.04719000199540328">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+											</Node>
+										</Node>
+										<Node score="1.9332457903913038">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="82.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.1857284144776763">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+										<Node score="-1.2653236659549372">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="30.0"/>
+										</Node>
+									</Node>
+									<Node score="2.171166197945635">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="13.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="48">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.1426135996326423">
+									<True/>
+									<Node score="-1.3155971358461784">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="4.022844572468167">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.0"/>
+											<Node score="0.03143553650299201">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+											</Node>
+										</Node>
+										<Node score="-3.13263735375343E-4">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="109.5"/>
+										</Node>
+									</Node>
+									<Node score="1.6394864616992448">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="22.5"/>
+										<Node score="-0.49921394558724197">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="35.5"/>
+										</Node>
+									</Node>
+									<Node score="0.06452677625777181">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="49">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.007630263423621071">
+									<True/>
+									<Node score="-1.1533670410180472">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.0796530837639384">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+											<Node score="-1.0936175750308885">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="58.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.2844018101704193">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="70.0"/>
+										</Node>
+									</Node>
+									<Node score="1.7524344633444748">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="1.5412188959588702">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.216862212404051">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="21.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="50">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.5878586466697773">
+									<True/>
+									<Node score="-1.2247005347040516">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="3.130531339153049">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="376.5"/>
+											<Node score="-0.06946793942833429">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="367.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.3280696561773135">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.1278443905474121">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="399.5"/>
+										<Node score="2.256418660314821">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="71.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.007776126009510288">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="51">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.011766651505608962">
+									<True/>
+									<Node score="0.3323734753665981">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										<Node score="0.09004143572288668">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+											<Node score="-1.0400465842886457">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="40.5"/>
+											</Node>
+										</Node>
+										<Node score="2.3062638499781056">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="136.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.24677998759135575">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="263.5"/>
+										<Node score="-0.9667346012255424">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="29.5"/>
+										</Node>
+									</Node>
+									<Node score="2.8493509838515436">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="265.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="52">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.4751454566452817">
+									<True/>
+									<Node score="0.6163611471228331">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="762.5"/>
+										<Node score="-1.3345549430877324">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="750.0"/>
+											<Node score="0.007054551368328477">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="741.0"/>
+											</Node>
+										</Node>
+										<Node score="2.567227600536954">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.213881942587522">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.009014335259213403">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2394288445242625">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="53">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.048057833658649074">
+									<True/>
+									<Node score="-0.17395592110959987">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+										<Node score="0.19859706504219113">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="587.5"/>
+											<Node score="-0.1224182357101291">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="129.0"/>
+											</Node>
+										</Node>
+										<Node score="1.6291421072434382">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="82.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.1660728383785761">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+										<Node score="-1.2358646227878698">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="30.0"/>
+										</Node>
+									</Node>
+									<Node score="1.9378852195236866">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="13.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="54">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.019566672760644947">
+									<True/>
+									<Node score="1.7726599577000872">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="-0.9770288741946218">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="658.0"/>
+											<Node score="0.7910174105853757">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="169.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="0.9376957761457876">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+										<Node score="-0.03599419421704668">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.4672482080335642">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="73.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="55">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-1.067393409014509">
+									<True/>
+									<Node score="-0.6097796055789333">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="5.5"/>
+										<Node score="1.647146731682263">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="11.0"/>
+										</Node>
+										<Node score="0.17112438889471993">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="208.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.7687529814129294">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="284.5"/>
+										<Node score="0.02970241686789875">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+										</Node>
+									</Node>
+									<Node score="1.2104434996839235">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="53.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="56">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.0037503949590239585">
+									<True/>
+									<Node score="-1.0605704943828402">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.1360394878510511">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-1.2729281796212426">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="70.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.0799762023192352">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="269.5"/>
+										</Node>
+									</Node>
+									<Node score="1.2404944085879668">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="-0.09356271176211803">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.8981809421581618">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="57">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.6804703428606285">
+									<True/>
+									<Node score="-0.5648783041353473">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="5.5"/>
+										<Node score="1.5490741097731735">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="11.0"/>
+										</Node>
+										<Node score="0.14202356760710805">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="208.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.194068858964788">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="0.02334855889896827">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										</Node>
+									</Node>
+									<Node score="3.2759663501609304">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="13.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="58">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.038536016809756574">
+									<True/>
+									<Node score="0.13485546737657145">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="360.5"/>
+										<Node score="2.46220278195111">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="351.5"/>
+											<Node score="-0.06655865189341792">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="343.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.2633735809567808">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="253.0"/>
+										</Node>
+									</Node>
+									<Node score="5.564490773655549">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="361.5"/>
+									</Node>
+									<Node score="0.4148419545860745">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="432.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="59">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.14042007055022224">
+									<True/>
+									<Node score="-1.2654675746869748">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="2.842310880213313">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.0"/>
+											<Node score="-0.08920814674649018">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+											</Node>
+										</Node>
+										<Node score="0.08654595673857406">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="109.5"/>
+										</Node>
+									</Node>
+									<Node score="1.7934787007846056">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="22.5"/>
+										<Node score="-0.14395677081714525">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="44.5"/>
+										</Node>
+									</Node>
+									<Node score="0.06332750206212166">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="60">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.021504456946660817">
+									<True/>
+									<Node score="-1.353598728491124">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="34.5"/>
+										<Node score="1.8888542718827548">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="31.5"/>
+											<Node score="-0.07857531458192621">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.1899070919390478">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="381.0"/>
+										</Node>
+									</Node>
+									<Node score="0.2582462873225232">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										<Node score="1.850301609246793">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.5253000391924819">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="61">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.7894558546121738">
+									<True/>
+									<Node score="0.46591393090681904">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="13.5"/>
+										<Node score="0.04367804329328026">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="260.5"/>
+											<Node score="-0.6813355294623602">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="323.5"/>
+											</Node>
+										</Node>
+										<Node score="3.191375096530623">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="263.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2468213381912168">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="17.5"/>
+										<Node score="0.7049254897000887">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="699.0"/>
+										</Node>
+									</Node>
+									<Node score="0.01656709685034014">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="62">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.013871732363417483">
+									<True/>
+									<Node score="0.2916296590096925">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										<Node score="2.7937295965278954">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+										</Node>
+										<Node score="-0.23727955100006465">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.301490586588828">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="225.5"/>
+										<Node score="-1.1325318391467172">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="224.5"/>
+										</Node>
+									</Node>
+									<Node score="3.945933956371305">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="226.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="63">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.015042703142109606">
+									<True/>
+									<Node score="-1.2366630883542735">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="2.3336006586565166">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.0"/>
+											<Node score="-0.05365895303635473">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+											</Node>
+										</Node>
+										<Node score="0.05443632988220702">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="109.5"/>
+										</Node>
+									</Node>
+									<Node score="0.8162198163391416">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+										<Node score="-0.028402578375985185">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.42557227923526786">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="73.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="64">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.006779750270949313">
+									<True/>
+									<Node score="-1.1279669845490552">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.0510732008170112">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+											<Node score="-1.0743404962221748">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="269.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.27002639355348">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="70.0"/>
+										</Node>
+									</Node>
+									<Node score="1.6300930206884263">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="1.4965597522101584">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2026166049693037">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="21.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="65">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.03721017951215152">
+									<True/>
+									<Node score="-1.3882617936611077">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="389.5"/>
+										<Node score="-1.2561869852867698">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+											<Node score="0.0017762823651817927">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="376.5"/>
+											</Node>
+										</Node>
+										<Node score="0.007171154288318158">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="107.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.1403544557083562">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="399.5"/>
+										<Node score="1.9573001227105298">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="71.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.9658678777749821">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="405.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="66">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.39534918135453956">
+									<True/>
+									<Node score="-0.07201007937505534">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="256.5"/>
+										<Node score="2.1428547714909665">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="167.5"/>
+											<Node score="0.09007458697760802">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="157.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.566118543870584">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.0"/>
+										</Node>
+									</Node>
+									<Node score="0.7092205763010916">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="158.5"/>
+										<Node score="-1.5106781300218173">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="43.0"/>
+										</Node>
+									</Node>
+									<Node score="2.3182044683135605">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="175.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="67">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.43150183196410363">
+									<True/>
+									<Node score="-0.3622826248234484">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="-0.9063113797993679">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="36.5"/>
+											<Node score="0.024496826858984435">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="34.5"/>
+											</Node>
+										</Node>
+										<Node score="0.9534041376667369">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="614.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.44681392764229627">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="266.0"/>
+										<Node score="0.043070444670318044">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="97.5"/>
+										</Node>
+									</Node>
+									<Node score="2.264377072773505">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="50.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="68">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.020912570742469327">
+									<True/>
+									<Node score="-1.3225777158519498">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="34.5"/>
+										<Node score="1.0867799117383867">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="31.5"/>
+											<Node score="-0.13080389761040756">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="30.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.167813573177217">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="381.0"/>
+										</Node>
+									</Node>
+									<Node score="5.656358853363514">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										<Node score="0.42274572282525563">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="670.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.48061481846684545">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="69">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.018284019803843136">
+									<True/>
+									<Node score="-1.7949010063685034">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="-1.2703661973957554">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+											<Node score="0.2414197591878246">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="23.5"/>
+											</Node>
+										</Node>
+										<Node score="1.4646836323404218">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="259.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.5815718332387492">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										<Node score="-0.5093281559968152">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="212.5"/>
+										</Node>
+									</Node>
+									<Node score="1.559697101443037">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="70">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.7418184777904845">
+									<True/>
+									<Node score="-1.251778172581674">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="50.5"/>
+										<Node score="0.11734203935633508">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="48.5"/>
+											<Node score="-0.11664284259067294">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="90.5"/>
+											</Node>
+										</Node>
+										<Node score="1.7258752400817359">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="96.5"/>
+										</Node>
+									</Node>
+									<Node score="1.9724499659075736">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="204.5"/>
+										<Node score="-0.1477328273746765">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="129.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.3615894452126591">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="52.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="71">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.022407747514680727">
+									<True/>
+									<Node score="-0.14318641824810682">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="5.5"/>
+										<Node score="1.49436229160017">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="11.0"/>
+										</Node>
+										<Node score="-1.200191087899367">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="53.0"/>
+										</Node>
+									</Node>
+									<Node score="0.7659462964725195">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="8.5"/>
+										<Node score="-1.1672809023456299">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.386734903389238">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="72">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.32212087051367794">
+									<True/>
+									<Node score="-0.33775113798883105">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="-0.8525126848199275">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="36.5"/>
+											<Node score="0.02339041494193367">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="34.5"/>
+											</Node>
+										</Node>
+										<Node score="0.8710096318074707">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="614.5"/>
+										</Node>
+									</Node>
+									<Node score="0.1595802822462019">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="266.0"/>
+										<Node score="-0.3102101674363733">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="452.0"/>
+										</Node>
+									</Node>
+									<Node score="1.9977340070220981">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="50.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="73">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.001018437408001105">
+									<True/>
+									<Node score="0.5813437773630471">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="481.0"/>
+										<Node score="-1.0858574364958444">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="472.0"/>
+											<Node score="0.029414521372978363">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="459.5"/>
+											</Node>
+										</Node>
+										<Node score="1.6181892197234589">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="478.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.3624872395590475">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="554.5"/>
+										<Node score="-0.4336385426262374">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="102.0"/>
+										</Node>
+									</Node>
+									<Node score="1.9986701983055015">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="558.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="74">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.9800806540120207">
+									<True/>
+									<Node score="0.8021839359872798">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="272.5"/>
+										<Node score="-0.4744313315088607">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="256.5"/>
+											<Node score="0.016706992088331235">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="237.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.4179569085725723">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="152.0"/>
+										</Node>
+									</Node>
+									<Node score="0.11892465278736081">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="475.0"/>
+										<Node score="-1.435398414237739">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="42.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.3680820514366825">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="277.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="75">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.11914637873590439">
+									<True/>
+									<Node score="0.7125530339974999">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+										<Node score="-0.5588958271264515">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="636.0"/>
+											<Node score="0.03934277370023476">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+											</Node>
+										</Node>
+										<Node score="2.1198091867079865">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="89.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1321189344389393">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="655.0"/>
+										<Node score="-1.1908042996287693">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="35.0"/>
+										</Node>
+									</Node>
+									<Node score="0.4686818654740265">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="8.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="76">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.995137357616847">
+									<True/>
+									<Node score="2.416146497674557">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										<Node score="-1.1989561969012992">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											<Node score="0.011505691058631605">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="770.0"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.1951250246780425">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="-1.1194492074637836">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="79.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1996859963527757">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="77">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.017077371884753643">
+									<True/>
+									<Node score="-1.5896493058689825">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="-1.237490907050107">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+											<Node score="0.2391785566116806">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="23.5"/>
+											</Node>
+										</Node>
+										<Node score="1.3311477649846342">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="259.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.12739906389153616">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										<Node score="-1.4265137483349055">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="144.5"/>
+										</Node>
+									</Node>
+									<Node score="1.4900044935709351">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="78">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.04570408493189299">
+									<True/>
+									<Node score="-0.4667607947339871">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+										<Node score="1.9321795059899798">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.0"/>
+											<Node score="-0.10090687868764847">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="13.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.2389077371698458">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="45.5"/>
+										</Node>
+									</Node>
+									<Node score="0.7100506364199534">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+										<Node score="-0.014232939032084007">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.23664811256144844">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="88.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="79">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.006928828978140047">
+									<True/>
+									<Node score="-1.0523429833606535">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.2723043897326187">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-1.1190697166551107">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="24.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.074375361632975">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="218.0"/>
+										</Node>
+									</Node>
+									<Node score="1.5289966013776493">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="1.3898182337217826">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="7.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1776688422283135">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="21.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="80">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.6971537598490147">
+									<True/>
+									<Node score="0.2898483108073261">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+										<Node score="-0.7318410448935142">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+											<Node score="-0.015328569232735277">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="21.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.2271273282527433">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="26.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.0447516367095646">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.5"/>
+										<Node score="1.7876846762995036">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="19.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.07297890212863467">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="266.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="81">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.016378695778161177">
+									<True/>
+									<Node score="-1.5048662118895013">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="-1.138376345703647">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+											<Node score="0.49584177164352555">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.0"/>
+											</Node>
+										</Node>
+										<Node score="1.2224006330262074">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="259.0"/>
+										</Node>
+									</Node>
+									<Node score="-1.53927699267488">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										<Node score="-0.4331144961670066">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="212.5"/>
+										</Node>
+									</Node>
+									<Node score="1.4351878735731907">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="82">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.02832135937666992">
+									<True/>
+									<Node score="0.18499351473764786">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="360.5"/>
+										<Node score="2.026714985556296">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="351.5"/>
+											<Node score="-0.061887492117322807">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="343.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.2183178681126738">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="253.0"/>
+										</Node>
+									</Node>
+									<Node score="3.5262786892708817">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="361.5"/>
+									</Node>
+									<Node score="0.35827456584577194">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="426.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="83">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.007768717990774501">
+									<True/>
+									<Node score="0.4813483035812167">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="13.5"/>
+										<Node score="0.038923784152681995">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="260.5"/>
+											<Node score="-0.6402811970216644">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="323.5"/>
+											</Node>
+										</Node>
+										<Node score="2.4091660085147346">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="263.5"/>
+										</Node>
+									</Node>
+									<Node score="1.3563997761457391">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="17.5"/>
+										<Node score="0.14801509897288806">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="16.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.2788799579281933">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="84">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.9389555704921769">
+									<True/>
+									<Node score="2.11057703187213">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										<Node score="-1.1762275386215297">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											<Node score="0.010726734924735094">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="770.0"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.1769629652953835">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="-1.1053178294219876">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="79.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1770940566429067">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="85">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.01383484305285903">
+									<True/>
+									<Node score="1.3435371405809864">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+										<Node score="-1.2532285699118395">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+											<Node score="0.068751955582604">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="50.5"/>
+											</Node>
+										</Node>
+										<Node score="-0.5815718588280365">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+										</Node>
+									</Node>
+									<Node score="0.37635288043969606">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+										<Node score="2.678048613876449">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="69.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.46777033976852767">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="86">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="0.6898542841709611">
+									<True/>
+									<Node score="0.12821578345431373">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.09475324210322378">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="-0.3667970117856918">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="1.0707865212821386">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="311.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.7551927766871654">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+										<Node score="-0.01540022362186579">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="596.5"/>
+										</Node>
+									</Node>
+									<Node score="2.972299418220888">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="755.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="87">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.012872531114366221">
+									<True/>
+									<Node score="-1.0525116486675246">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.3287679727731896">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+											<Node score="-1.1274001617992206">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="24.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.0787004526292374">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="4.5"/>
+										</Node>
+									</Node>
+									<Node score="1.4646187941431528">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="9.5"/>
+										<Node score="1.3461374768377277">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.5"/>
+										</Node>
+									</Node>
+									<Node score="0.3355249184071868">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="37.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="88">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.3962916497860207">
+									<True/>
+									<Node score="0.46962342094784876">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="762.5"/>
+										<Node score="-1.263250476308539">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="750.0"/>
+											<Node score="0.004704936544623447">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="741.0"/>
+											</Node>
+										</Node>
+										<Node score="2.152540922416313">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="44.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1685897212592846">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.049615512692898274">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="11.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1784667705476142">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="160.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="89">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="0.7872071730117073">
+									<True/>
+									<Node score="0.11915870192251131">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+										<Node score="0.09067644675689043">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+											<Node score="-0.34278175358751434">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+											</Node>
+										</Node>
+										<Node score="0.9577014124043138">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="311.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.3353051143027455">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="33.5"/>
+										<Node score="0.4643859764733081">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="177.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.05542147350329516">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="752.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="90">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.07253098925957825">
+									<True/>
+									<Node score="1.9711536274577655">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="613.0"/>
+										<Node score="0.16626897331030033">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="599.0"/>
+											<Node score="-0.09540000668175788">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="129.0"/>
+											</Node>
+										</Node>
+										<Node score="-1.419958427877387">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="16.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1465601260434441">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="628.5"/>
+										<Node score="-1.3583090657537964">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="47.0"/>
+										</Node>
+									</Node>
+									<Node score="2.8448662317097733">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="631.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="91">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.8665634884241996">
+									<True/>
+									<Node score="1.8415554299637549">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="272.5"/>
+										<Node score="-1.6363781894394824">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="271.5"/>
+											<Node score="0.010131033460859903">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="270.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.3671807101841422">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="475.0"/>
+										<Node score="0.2013327461971278">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="107.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.3461433543027796">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="277.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="92">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.8437319925220311">
+									<True/>
+									<Node score="1.8862362096789824">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										<Node score="-1.1408013144034885">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											<Node score="0.010136683372134025">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="770.0"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.150830088187992">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="-1.0868791230525292">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="79.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1604771900876243">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="93">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="-0.013532218146095914">
+									<True/>
+									<Node score="0.4199735050247419">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+										<Node score="2.4397120594469706">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+										</Node>
+										<Node score="-0.12796866280614816">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.306885766650579">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="225.5"/>
+										<Node score="-1.1053999212165504">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="224.5"/>
+										</Node>
+									</Node>
+									<Node score="2.776844789596351">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="226.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="94">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.07286617810882147">
+									<True/>
+									<Node score="2.241589412750875">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="167.5"/>
+										<Node score="0.10537710277465853">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="157.0"/>
+											<Node score="-0.988170412976522">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="40.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.1779484054886764">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.0451401657499268">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="256.5"/>
+										<Node score="-0.9178864308617766">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="179.5"/>
+										</Node>
+									</Node>
+									<Node score="1.3601358972246658">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="263.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="95">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.031011707321401027">
+									<True/>
+									<Node score="1.1558779403039223">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+										<Node score="1.7254231851314186">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+											<Node score="-0.07171078457621892">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+											</Node>
+										</Node>
+										<Node score="-0.5430151981803096">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+										</Node>
+									</Node>
+									<Node score="-0.6438375065399986">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="73.5"/>
+										<Node score="1.175022983692194">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="10.0"/>
+										</Node>
+									</Node>
+									<Node score="1.7836922757368272">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="76.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="96">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+								</MiningSchema>
+								<Node score="0.004752054586972648">
+									<True/>
+									<Node score="-1.3523170564335758">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+										<Node score="-1.046352916002624">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="5.5"/>
+											<Node score="-1.0781416040109302">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="4.5"/>
+											</Node>
+										</Node>
+										<Node score="-1.108626105368943">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="24.0"/>
+										</Node>
+									</Node>
+									<Node score="2.7560014095388268">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="23.5"/>
+										<Node score="-0.11299560710797309">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="21.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1939661826628978">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="97">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="-0.16001076058700955">
+									<True/>
+									<Node score="-0.12701874923734371">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="54.5"/>
+										<Node score="-0.8682811081774603">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="52.5"/>
+											<Node score="0.021872464844256406">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="50.5"/>
+											</Node>
+										</Node>
+										<Node score="1.578754366492858">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="307.5"/>
+										</Node>
+									</Node>
+									<Node score="3.617713761471392">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="90.5"/>
+										<Node score="0.08177768908244427">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="88.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1888596400270848">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="98">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.7398129552970942">
+									<True/>
+									<Node score="1.7385330498395053">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="775.5"/>
+										<Node score="-0.2523746452093034">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="773.0"/>
+											<Node score="0.017924261616856393">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="272.5"/>
+											</Node>
+										</Node>
+									</Node>
+									<Node score="-1.1388983050205679">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+										<Node score="-1.0747669826770503">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="79.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1418753190422108">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="99">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="1.0881835712530352">
+									<True/>
+									<Node score="0.06521584581170041">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="56.5"/>
+										<Node score="0.7102322566224839">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="60.5"/>
+											<Node score="-0.025556348294202003">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="54.0"/>
+											</Node>
+										</Node>
+										<Node score="-0.2360683168242159">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="90.5"/>
+										</Node>
+									</Node>
+									<Node score="-1.1764633700117675">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+										<Node score="0.8142513349374219">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="157.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.8053921246703502">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="463.0"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+						<Segment id="100">
+							<True/>
+							<TreeModel functionName="regression" missingValueStrategy="nullPrediction" noTrueChildStrategy="returnLastPrediction">
+								<MiningSchema>
+									<MiningField name="double(Id_proxy)"/>
+									<MiningField name="double(Id_Website)"/>
+									<MiningField name="double(time_elapsed)"/>
+								</MiningSchema>
+								<Node score="0.02564551263211894">
+									<True/>
+									<Node score="-1.3411714774782142">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+										<Node score="-0.8636707039336329">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="691.5"/>
+											<Node score="0.09032134386559282">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="68.5"/>
+											</Node>
+										</Node>
+										<Node score="1.3069157705218624">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="255.0"/>
+										</Node>
+									</Node>
+									<Node score="1.431879970324348">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="49.0"/>
+										<Node score="0.07244520893927608">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="44.0"/>
+										</Node>
+									</Node>
+									<Node score="-0.34852651332085255">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="132.5"/>
+									</Node>
+								</Node>
+							</TreeModel>
+						</Segment>
+					</Segmentation>
+				</MiningModel>
+			</Segment>
+			<Segment id="2">
+				<True/>
+				<RegressionModel functionName="classification">
+					<MiningSchema>
+						<MiningField name="Success" usageType="target"/>
+						<MiningField name="sigmoid(decisionFunction(1))"/>
+					</MiningSchema>
+					<Output>
+						<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+						<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+					</Output>
+					<RegressionTable intercept="0.0" targetCategory="1">
+						<NumericPredictor name="sigmoid(decisionFunction(1))" coefficient="1.0"/>
+					</RegressionTable>
+					<RegressionTable intercept="0.0" targetCategory="0"/>
+				</RegressionModel>
+			</Segment>
+		</Segmentation>
+	</MiningModel>
+</PMML>

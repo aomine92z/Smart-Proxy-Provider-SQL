@@ -1,6 +1,7 @@
 package javaclass;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -164,11 +165,9 @@ public class PP_Service {
             // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
             // obtenue
 
-            
-
-            List<Proxy> selectedProxies = new ArrayList<>();
             Proxy selectedProxy = null;
             int webid = url.getId_website();
+            Map<Double, Proxy> proxyClassifier = new HashMap<>();
 
 
             for (Proxy proxy : matchingProxies) {
@@ -186,23 +185,18 @@ public class PP_Service {
                 inputData.put("time_elapsed", totalSeconds);
 
                 Map<String, ?> results = model_Evaluator.evaluate(inputData);
+
                 results = EvaluatorUtil.decodeAll(results);
+                Double resultObject = (double) results.get("probability(1)");
+                System.out.println(resultObject);
 
-                Object resultObject = results.get("Success");
-
-
-                if (resultObject instanceof Integer) {
-                    Integer success = (Integer) resultObject;
-                    if (success == 1) {
-                        selectedProxies.add(proxy);
-                    }
-                }
+                proxyClassifier.put(resultObject, proxy);
 
             }
-
-            if(selectedProxies.size() > 0){
-                int randomIndex = random.nextInt(selectedProxies.size());
-                selectedProxy = selectedProxies.get(randomIndex);
+            
+            if(proxyClassifier.size() > 0){
+                selectedProxy = proxyClassifier.get(Collections.max(proxyClassifier.keySet()));
+                // System.out.println(selectedProxy);
             } else{
                 return null;
             }

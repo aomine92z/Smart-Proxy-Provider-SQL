@@ -1,0 +1,1192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.93.0"/>
+		<Timestamp>2023-06-14T13:25:42Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="Success" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+		<DataField name="Id_Website" optype="continuous" dataType="float"/>
+		<DataField name="Id_proxy" optype="continuous" dataType="float"/>
+		<DataField name="time_elapsed" optype="continuous" dataType="float"/>
+	</DataDictionary>
+	<TreeModel functionName="classification" algorithmName="sklearn.tree._classes.DecisionTreeClassifier" missingValueStrategy="nullPrediction">
+		<MiningSchema>
+			<MiningField name="Success" usageType="target"/>
+			<MiningField name="Id_proxy"/>
+			<MiningField name="Id_Website"/>
+			<MiningField name="time_elapsed"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<LocalTransformations>
+			<DerivedField name="double(Id_proxy)" optype="continuous" dataType="double">
+				<FieldRef field="Id_proxy"/>
+			</DerivedField>
+			<DerivedField name="double(Id_Website)" optype="continuous" dataType="double">
+				<FieldRef field="Id_Website"/>
+			</DerivedField>
+			<DerivedField name="double(time_elapsed)" optype="continuous" dataType="double">
+				<FieldRef field="time_elapsed"/>
+			</DerivedField>
+		</LocalTransformations>
+		<Node>
+			<True/>
+			<Node>
+				<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="38.5"/>
+				<Node>
+					<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="25.0"/>
+					<Node>
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="259.0"/>
+						<Node>
+							<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="47.0"/>
+							<Node score="0" recordCount="5">
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="77.0"/>
+								<ScoreDistribution value="0" recordCount="5"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="257.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="34.5"/>
+									<Node>
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="23.5"/>
+										<Node score="0" recordCount="1">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="6.5"/>
+											<ScoreDistribution value="0" recordCount="1"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+										<Node score="1" recordCount="2">
+											<True/>
+											<ScoreDistribution value="0" recordCount="0"/>
+											<ScoreDistribution value="1" recordCount="2"/>
+										</Node>
+									</Node>
+									<Node score="0" recordCount="2">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="5">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="5"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="2">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="1">
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="12.5"/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="1"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="197.0"/>
+							<Node>
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="178.0"/>
+								<Node score="1" recordCount="1">
+									<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="1.5"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="151.0"/>
+									<Node score="0" recordCount="23">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="207.5"/>
+										<ScoreDistribution value="0" recordCount="23"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="223.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="6">
+										<True/>
+										<ScoreDistribution value="0" recordCount="6"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="1">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="84.0"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+								<Node score="0" recordCount="3">
+									<True/>
+									<ScoreDistribution value="0" recordCount="3"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="16.0"/>
+								<Node score="0" recordCount="2">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="202.5"/>
+									<ScoreDistribution value="0" recordCount="2"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+								<Node score="1" recordCount="2">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="275.5"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="2"/>
+								</Node>
+								<Node score="0" recordCount="1">
+									<True/>
+									<ScoreDistribution value="0" recordCount="1"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="1">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="28">
+							<True/>
+							<ScoreDistribution value="0" recordCount="28"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node>
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="759.0"/>
+						<Node>
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="217.5"/>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="129.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+									<Node>
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="521.5"/>
+										<Node score="0" recordCount="2">
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.0"/>
+											<ScoreDistribution value="0" recordCount="2"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+										<Node score="0" recordCount="1">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="281.0"/>
+											<ScoreDistribution value="0" recordCount="1"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+										<Node>
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="104.5"/>
+											<Node>
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="34.5"/>
+												<Node score="1" recordCount="2">
+													<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="27.0"/>
+													<ScoreDistribution value="0" recordCount="0"/>
+													<ScoreDistribution value="1" recordCount="2"/>
+												</Node>
+												<Node score="0" recordCount="2">
+													<True/>
+													<ScoreDistribution value="0" recordCount="2"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+											</Node>
+											<Node score="1" recordCount="7">
+												<True/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="7"/>
+											</Node>
+										</Node>
+										<Node score="0" recordCount="1">
+											<True/>
+											<ScoreDistribution value="0" recordCount="1"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="89.5"/>
+										<Node>
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="86.0"/>
+											<Node>
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="637.5"/>
+												<Node score="0" recordCount="2">
+													<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="589.0"/>
+													<ScoreDistribution value="0" recordCount="2"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+												<Node score="0" recordCount="1">
+													<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.5"/>
+													<ScoreDistribution value="0" recordCount="1"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+												<Node score="1" recordCount="3">
+													<True/>
+													<ScoreDistribution value="0" recordCount="0"/>
+													<ScoreDistribution value="1" recordCount="3"/>
+												</Node>
+											</Node>
+											<Node score="1" recordCount="1">
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="15.0"/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="1"/>
+											</Node>
+											<Node>
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.0"/>
+												<Node score="1" recordCount="1">
+													<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="79.0"/>
+													<ScoreDistribution value="0" recordCount="0"/>
+													<ScoreDistribution value="1" recordCount="1"/>
+												</Node>
+												<Node score="0" recordCount="1">
+													<True/>
+													<ScoreDistribution value="0" recordCount="1"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+											</Node>
+											<Node score="0" recordCount="6">
+												<True/>
+												<ScoreDistribution value="0" recordCount="6"/>
+												<ScoreDistribution value="1" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node score="1" recordCount="1">
+											<True/>
+											<ScoreDistribution value="0" recordCount="0"/>
+											<ScoreDistribution value="1" recordCount="1"/>
+										</Node>
+									</Node>
+									<Node score="0" recordCount="3">
+										<True/>
+										<ScoreDistribution value="0" recordCount="3"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="111.5"/>
+									<Node>
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="746.5"/>
+										<Node>
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="20.5"/>
+											<Node>
+												<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="91.0"/>
+												<Node>
+													<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="14.5"/>
+													<Node score="0" recordCount="16">
+														<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="501.5"/>
+														<ScoreDistribution value="0" recordCount="16"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+													<Node>
+														<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="610.5"/>
+														<Node score="0" recordCount="1">
+															<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="32.0"/>
+															<ScoreDistribution value="0" recordCount="1"/>
+															<ScoreDistribution value="1" recordCount="0"/>
+														</Node>
+														<Node score="1" recordCount="3">
+															<True/>
+															<ScoreDistribution value="0" recordCount="0"/>
+															<ScoreDistribution value="1" recordCount="3"/>
+														</Node>
+													</Node>
+													<Node score="0" recordCount="8">
+														<True/>
+														<ScoreDistribution value="0" recordCount="8"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+												</Node>
+												<Node score="1" recordCount="2">
+													<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="317.5"/>
+													<ScoreDistribution value="0" recordCount="0"/>
+													<ScoreDistribution value="1" recordCount="2"/>
+												</Node>
+												<Node>
+													<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="73.5"/>
+													<Node score="0" recordCount="10">
+														<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="658.0"/>
+														<ScoreDistribution value="0" recordCount="10"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+													<Node>
+														<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="61.5"/>
+														<Node score="1" recordCount="1">
+															<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="702.0"/>
+															<ScoreDistribution value="0" recordCount="0"/>
+															<ScoreDistribution value="1" recordCount="1"/>
+														</Node>
+														<Node score="0" recordCount="1">
+															<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="53.5"/>
+															<ScoreDistribution value="0" recordCount="1"/>
+															<ScoreDistribution value="1" recordCount="0"/>
+														</Node>
+														<Node score="1" recordCount="1">
+															<True/>
+															<ScoreDistribution value="0" recordCount="0"/>
+															<ScoreDistribution value="1" recordCount="1"/>
+														</Node>
+													</Node>
+													<Node score="0" recordCount="2">
+														<True/>
+														<ScoreDistribution value="0" recordCount="2"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+												</Node>
+												<Node>
+													<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="643.5"/>
+													<Node score="1" recordCount="3">
+														<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="84.0"/>
+														<ScoreDistribution value="0" recordCount="0"/>
+														<ScoreDistribution value="1" recordCount="3"/>
+													</Node>
+													<Node score="0" recordCount="1">
+														<True/>
+														<ScoreDistribution value="0" recordCount="1"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+												</Node>
+												<Node score="0" recordCount="3">
+													<True/>
+													<ScoreDistribution value="0" recordCount="3"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+											</Node>
+											<Node score="1" recordCount="1">
+												<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="13.0"/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="1"/>
+											</Node>
+											<Node score="1" recordCount="1">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="404.5"/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="1"/>
+											</Node>
+											<Node score="0" recordCount="1">
+												<True/>
+												<ScoreDistribution value="0" recordCount="1"/>
+												<ScoreDistribution value="1" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node score="0" recordCount="11">
+											<True/>
+											<ScoreDistribution value="0" recordCount="11"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="1" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="585.0"/>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="375.5"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="2">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="3">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="3"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="14">
+								<True/>
+								<ScoreDistribution value="0" recordCount="14"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="6.5"/>
+							<Node>
+								<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="4.5"/>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="277.5"/>
+									<Node score="0" recordCount="2">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="641.0"/>
+										<ScoreDistribution value="0" recordCount="2"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="255.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="1">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="5">
+								<True/>
+								<ScoreDistribution value="0" recordCount="5"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="18.0"/>
+							<Node>
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="508.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="267.5"/>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="240.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="7">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="7"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="277.5"/>
+								<Node score="1" recordCount="1">
+									<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="8.5"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="227.0"/>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="4">
+									<True/>
+									<ScoreDistribution value="0" recordCount="4"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="3">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="3"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="3">
+							<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="363.0"/>
+							<ScoreDistribution value="0" recordCount="3"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="22.5"/>
+							<Node score="1" recordCount="1">
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="384.5"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+							<Node score="0" recordCount="3">
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="260.0"/>
+								<ScoreDistribution value="0" recordCount="3"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+							<Node score="1" recordCount="1">
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="274.5"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+							<Node score="0" recordCount="1">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="2">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="2"/>
+						</Node>
+					</Node>
+					<Node>
+						<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="9.5"/>
+						<Node score="1" recordCount="1">
+							<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="776.0"/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="1"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="80.5"/>
+							<Node score="0" recordCount="1">
+								<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="5.5"/>
+								<ScoreDistribution value="0" recordCount="1"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+							<Node score="1" recordCount="1">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="6">
+							<True/>
+							<ScoreDistribution value="0" recordCount="6"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node score="0" recordCount="15">
+						<True/>
+						<ScoreDistribution value="0" recordCount="15"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="789.5"/>
+					<Node>
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="639.0"/>
+						<Node score="0" recordCount="7">
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="26.5"/>
+							<ScoreDistribution value="0" recordCount="7"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="31.5"/>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="62.0"/>
+								<Node score="0" recordCount="1">
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="27.0"/>
+									<ScoreDistribution value="0" recordCount="1"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+								<Node score="1" recordCount="8">
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="565.0"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="8"/>
+								</Node>
+								<Node score="0" recordCount="1">
+									<True/>
+									<ScoreDistribution value="0" recordCount="1"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="205.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="570.5"/>
+									<Node>
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="30.5"/>
+										<Node>
+											<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="26.5"/>
+											<Node score="1" recordCount="2">
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="439.0"/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="2"/>
+											</Node>
+											<Node score="0" recordCount="1">
+												<True/>
+												<ScoreDistribution value="0" recordCount="1"/>
+												<ScoreDistribution value="1" recordCount="0"/>
+											</Node>
+										</Node>
+										<Node>
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="455.0"/>
+											<Node>
+												<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="441.5"/>
+												<Node>
+													<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="199.5"/>
+													<Node>
+														<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="118.0"/>
+														<Node score="0" recordCount="1">
+															<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="68.5"/>
+															<ScoreDistribution value="0" recordCount="1"/>
+															<ScoreDistribution value="1" recordCount="0"/>
+														</Node>
+														<Node score="1" recordCount="2">
+															<True/>
+															<ScoreDistribution value="0" recordCount="0"/>
+															<ScoreDistribution value="1" recordCount="2"/>
+														</Node>
+													</Node>
+													<Node score="0" recordCount="2">
+														<True/>
+														<ScoreDistribution value="0" recordCount="2"/>
+														<ScoreDistribution value="1" recordCount="0"/>
+													</Node>
+												</Node>
+												<Node score="0" recordCount="7">
+													<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="29.5"/>
+													<ScoreDistribution value="0" recordCount="7"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+												<Node score="1" recordCount="1">
+													<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="86.0"/>
+													<ScoreDistribution value="0" recordCount="0"/>
+													<ScoreDistribution value="1" recordCount="1"/>
+												</Node>
+												<Node score="0" recordCount="1">
+													<True/>
+													<ScoreDistribution value="0" recordCount="1"/>
+													<ScoreDistribution value="1" recordCount="0"/>
+												</Node>
+											</Node>
+											<Node score="1" recordCount="1">
+												<True/>
+												<ScoreDistribution value="0" recordCount="0"/>
+												<ScoreDistribution value="1" recordCount="1"/>
+											</Node>
+										</Node>
+										<Node score="0" recordCount="5">
+											<True/>
+											<ScoreDistribution value="0" recordCount="5"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+									</Node>
+									<Node score="1" recordCount="2">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="2"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="3">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="3"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="273.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="163.5"/>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="112.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node score="0" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="1"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="7">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="7"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="2">
+								<True/>
+								<ScoreDistribution value="0" recordCount="2"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="36.5"/>
+							<Node score="1" recordCount="1">
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="32.5"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="270.5"/>
+								<Node>
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="234.0"/>
+									<Node score="1" recordCount="1">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="50.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+									<Node>
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="32.5"/>
+										<Node score="0" recordCount="2">
+											<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="135.0"/>
+											<ScoreDistribution value="0" recordCount="2"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+										<Node score="0" recordCount="1">
+											<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="91.0"/>
+											<ScoreDistribution value="0" recordCount="1"/>
+											<ScoreDistribution value="1" recordCount="0"/>
+										</Node>
+										<Node score="1" recordCount="1">
+											<True/>
+											<ScoreDistribution value="0" recordCount="0"/>
+											<ScoreDistribution value="1" recordCount="1"/>
+										</Node>
+									</Node>
+									<Node score="0" recordCount="4">
+										<True/>
+										<ScoreDistribution value="0" recordCount="4"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="1">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="10">
+								<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="35.5"/>
+								<ScoreDistribution value="0" recordCount="10"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+							<Node score="0" recordCount="5">
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="94.0"/>
+								<ScoreDistribution value="0" recordCount="5"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+							<Node score="1" recordCount="1">
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="162.5"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="1"/>
+							</Node>
+							<Node score="0" recordCount="1">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="394.0"/>
+							<Node>
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="320.0"/>
+								<Node score="1" recordCount="2">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="93.0"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="2"/>
+								</Node>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="212.5"/>
+									<Node score="0" recordCount="1">
+										<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="37.5"/>
+										<ScoreDistribution value="0" recordCount="1"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="2">
+									<True/>
+									<ScoreDistribution value="0" recordCount="2"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="4">
+								<True/>
+								<ScoreDistribution value="0" recordCount="4"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node>
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="34.5"/>
+							<Node score="1" recordCount="2">
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="440.0"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="2"/>
+							</Node>
+							<Node score="0" recordCount="1">
+								<True/>
+								<ScoreDistribution value="0" recordCount="1"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="1" recordCount="6">
+							<True/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="6"/>
+						</Node>
+					</Node>
+					<Node>
+						<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="37.5"/>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="28.5"/>
+							<Node>
+								<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="27.5"/>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="86.5"/>
+									<Node score="0" recordCount="3">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="76.0"/>
+										<ScoreDistribution value="0" recordCount="3"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="1">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="1"/>
+									</Node>
+								</Node>
+								<Node score="0" recordCount="5">
+									<True/>
+									<ScoreDistribution value="0" recordCount="5"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="2">
+								<True/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="2"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="14">
+							<True/>
+							<ScoreDistribution value="0" recordCount="14"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node score="0" recordCount="2">
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="767.0"/>
+						<ScoreDistribution value="0" recordCount="2"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+					<Node score="1" recordCount="2">
+						<True/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="2"/>
+					</Node>
+				</Node>
+				<Node score="1" recordCount="5">
+					<True/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="5"/>
+				</Node>
+			</Node>
+			<Node>
+				<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="173.5"/>
+				<Node>
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="30.5"/>
+					<Node score="1" recordCount="1">
+						<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="40.0"/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="1"/>
+					</Node>
+					<Node score="0" recordCount="15">
+						<True/>
+						<ScoreDistribution value="0" recordCount="15"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="56.5"/>
+					<Node>
+						<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="51.5"/>
+						<Node score="1" recordCount="1">
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="61.0"/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="1"/>
+						</Node>
+						<Node score="0" recordCount="1">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node score="1" recordCount="6">
+						<True/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="6"/>
+					</Node>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="126.5"/>
+					<Node score="0" recordCount="10">
+						<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="181.0"/>
+						<ScoreDistribution value="0" recordCount="10"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+					<Node score="1" recordCount="3">
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="107.5"/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="3"/>
+					</Node>
+					<Node score="0" recordCount="2">
+						<True/>
+						<ScoreDistribution value="0" recordCount="2"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node score="1" recordCount="3">
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="137.5"/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="3"/>
+				</Node>
+				<Node score="0" recordCount="3">
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="145.5"/>
+					<ScoreDistribution value="0" recordCount="3"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+				<Node score="1" recordCount="3">
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="88.5"/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="3"/>
+				</Node>
+				<Node score="0" recordCount="2">
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="117.5"/>
+					<ScoreDistribution value="0" recordCount="2"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="240.0"/>
+					<Node score="1" recordCount="1">
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="159.0"/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="1"/>
+					</Node>
+					<Node score="0" recordCount="1">
+						<True/>
+						<ScoreDistribution value="0" recordCount="1"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node score="1" recordCount="2">
+					<True/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="2"/>
+				</Node>
+			</Node>
+			<Node>
+				<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="293.5"/>
+				<Node>
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="20.5"/>
+					<Node score="1" recordCount="1">
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="240.0"/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="1"/>
+					</Node>
+					<Node score="0" recordCount="1">
+						<True/>
+						<ScoreDistribution value="0" recordCount="1"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="41.5"/>
+					<Node>
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="238.0"/>
+						<Node score="1" recordCount="1">
+							<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="110.0"/>
+							<ScoreDistribution value="0" recordCount="0"/>
+							<ScoreDistribution value="1" recordCount="1"/>
+						</Node>
+						<Node score="0" recordCount="1">
+							<True/>
+							<ScoreDistribution value="0" recordCount="1"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node score="0" recordCount="3">
+						<True/>
+						<ScoreDistribution value="0" recordCount="3"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+				</Node>
+				<Node score="0" recordCount="42">
+					<True/>
+					<ScoreDistribution value="0" recordCount="42"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+			</Node>
+			<Node>
+				<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="302.5"/>
+				<Node score="1" recordCount="3">
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="268.5"/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="3"/>
+				</Node>
+				<Node score="0" recordCount="1">
+					<True/>
+					<ScoreDistribution value="0" recordCount="1"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+			</Node>
+			<Node>
+				<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="59.5"/>
+				<Node score="0" recordCount="15">
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="346.5"/>
+					<ScoreDistribution value="0" recordCount="15"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+				<Node score="1" recordCount="1">
+					<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="347.5"/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="1"/>
+				</Node>
+				<Node score="0" recordCount="11">
+					<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="41.0"/>
+					<ScoreDistribution value="0" recordCount="11"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+				<Node>
+					<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="56.5"/>
+					<Node>
+						<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="55.5"/>
+						<Node>
+							<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="53.5"/>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="56.0"/>
+								<Node>
+									<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="52.5"/>
+									<Node score="0" recordCount="4">
+										<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="43.5"/>
+										<ScoreDistribution value="0" recordCount="4"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="2">
+										<True/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="2"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="2">
+									<True/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="2"/>
+								</Node>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="452.0"/>
+								<Node score="0" recordCount="15">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="243.0"/>
+									<ScoreDistribution value="0" recordCount="15"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+								<Node score="1" recordCount="1">
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="260.5"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+								<Node score="0" recordCount="2">
+									<True/>
+									<ScoreDistribution value="0" recordCount="2"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="1" recordCount="3">
+								<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="462.0"/>
+								<ScoreDistribution value="0" recordCount="0"/>
+								<ScoreDistribution value="1" recordCount="3"/>
+							</Node>
+							<Node>
+								<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="97.5"/>
+								<Node>
+									<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="90.5"/>
+									<Node score="0" recordCount="7">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="580.0"/>
+										<ScoreDistribution value="0" recordCount="7"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+									<Node score="1" recordCount="2">
+										<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="659.0"/>
+										<ScoreDistribution value="0" recordCount="0"/>
+										<ScoreDistribution value="1" recordCount="2"/>
+									</Node>
+									<Node score="0" recordCount="2">
+										<True/>
+										<ScoreDistribution value="0" recordCount="2"/>
+										<ScoreDistribution value="1" recordCount="0"/>
+									</Node>
+								</Node>
+								<Node score="1" recordCount="3">
+									<SimplePredicate field="double(Id_proxy)" operator="lessOrEqual" value="51.5"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="3"/>
+								</Node>
+								<Node score="1" recordCount="1">
+									<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="615.0"/>
+									<ScoreDistribution value="0" recordCount="0"/>
+									<ScoreDistribution value="1" recordCount="1"/>
+								</Node>
+								<Node score="0" recordCount="2">
+									<True/>
+									<ScoreDistribution value="0" recordCount="2"/>
+									<ScoreDistribution value="1" recordCount="0"/>
+								</Node>
+							</Node>
+							<Node score="0" recordCount="15">
+								<True/>
+								<ScoreDistribution value="0" recordCount="15"/>
+								<ScoreDistribution value="1" recordCount="0"/>
+							</Node>
+						</Node>
+						<Node score="0" recordCount="10">
+							<True/>
+							<ScoreDistribution value="0" recordCount="10"/>
+							<ScoreDistribution value="1" recordCount="0"/>
+						</Node>
+					</Node>
+					<Node score="1" recordCount="2">
+						<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="64.0"/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="2"/>
+					</Node>
+					<Node score="0" recordCount="2">
+						<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="498.5"/>
+						<ScoreDistribution value="0" recordCount="2"/>
+						<ScoreDistribution value="1" recordCount="0"/>
+					</Node>
+					<Node score="1" recordCount="1">
+						<True/>
+						<ScoreDistribution value="0" recordCount="0"/>
+						<ScoreDistribution value="1" recordCount="1"/>
+					</Node>
+				</Node>
+				<Node score="0" recordCount="11">
+					<True/>
+					<ScoreDistribution value="0" recordCount="11"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+			</Node>
+			<Node score="0" recordCount="2">
+				<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="463.0"/>
+				<ScoreDistribution value="0" recordCount="2"/>
+				<ScoreDistribution value="1" recordCount="0"/>
+			</Node>
+			<Node score="1" recordCount="2">
+				<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="91.0"/>
+				<ScoreDistribution value="0" recordCount="0"/>
+				<ScoreDistribution value="1" recordCount="2"/>
+			</Node>
+			<Node>
+				<SimplePredicate field="double(Id_Website)" operator="lessOrEqual" value="492.5"/>
+				<Node score="1" recordCount="2">
+					<SimplePredicate field="double(time_elapsed)" operator="lessOrEqual" value="241.0"/>
+					<ScoreDistribution value="0" recordCount="0"/>
+					<ScoreDistribution value="1" recordCount="2"/>
+				</Node>
+				<Node score="0" recordCount="1">
+					<True/>
+					<ScoreDistribution value="0" recordCount="1"/>
+					<ScoreDistribution value="1" recordCount="0"/>
+				</Node>
+			</Node>
+			<Node score="0" recordCount="2">
+				<True/>
+				<ScoreDistribution value="0" recordCount="2"/>
+				<ScoreDistribution value="1" recordCount="0"/>
+			</Node>
+		</Node>
+	</TreeModel>
+</PMML>

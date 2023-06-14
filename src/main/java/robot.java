@@ -58,7 +58,9 @@ public class robot {
             List<Proxy> proxies = Proxy.load_Proxies();
             Map<String, WillRespond> willresponds = WillRespond.load_willRespond();
             Map<String, SimulationWillRespond> simuwillresponds = SimulationWillRespond.load_simulationWillRespond();
-            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
+            System.out.println("Model started building...");
+            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model8.pmml")).build();
+            System.out.println("Model has been built.");
 
             // for (int i = 0; i < willresponds.size(); i++) {
             // System.out.println(willresponds.get(i).toString());

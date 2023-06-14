@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.93.0"/>
+		<Timestamp>2023-06-14T13:52:27Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="Success" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+		<DataField name="Id_Website" optype="continuous" dataType="double"/>
+		<DataField name="Id_proxy" optype="continuous" dataType="double"/>
+		<DataField name="time_elapsed" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._stochastic_gradient.SGDClassifier" normalizationMethod="logit">
+		<MiningSchema>
+			<MiningField name="Success" usageType="target"/>
+			<MiningField name="Id_Website"/>
+			<MiningField name="Id_proxy"/>
+			<MiningField name="time_elapsed"/>
+		</MiningSchema>
+		<RegressionTable intercept="-165.55677215825582" targetCategory="1">
+			<NumericPredictor name="Id_Website" coefficient="-24.32344043822729"/>
+			<NumericPredictor name="Id_proxy" coefficient="-62.95478701659577"/>
+			<NumericPredictor name="time_elapsed" coefficient="3.8835745237512653"/>
+		</RegressionTable>
+		<RegressionTable intercept="0.0" targetCategory="0"/>
+	</RegressionModel>
+</PMML>
