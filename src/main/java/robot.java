@@ -9,6 +9,7 @@ import javaclass.SimulationWillRespond;
 import javaclass.WillRespond;
 import javaclass.PP_Service;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import org.jpmml.evaluator.Evaluator;
+import org.jpmml.evaluator.LoadingModelEvaluatorBuilder;
 
 public class robot {
     public static void main(String[] args) throws Exception {
@@ -54,6 +58,7 @@ public class robot {
             List<Proxy> proxies = Proxy.load_Proxies();
             Map<String, WillRespond> willresponds = WillRespond.load_willRespond();
             Map<String, SimulationWillRespond> simuwillresponds = SimulationWillRespond.load_simulationWillRespond();
+            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
 
             // for (int i = 0; i < willresponds.size(); i++) {
             // System.out.println(willresponds.get(i).toString());
@@ -82,15 +87,15 @@ public class robot {
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random, 0, evaluator));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random, 0, evaluator));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random, 0, evaluator));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random, 0, evaluator));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random, 0, evaluator));
 
             List<Thread> threads = new ArrayList<>();
 

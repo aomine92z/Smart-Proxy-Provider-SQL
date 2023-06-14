@@ -20,9 +20,10 @@ public class PP_Service {
         private int nbtry;
         private Random random;
         private int localtried;
+        private Evaluator model_Evaluator;
 
         public ServiceRunner(List<URL> URL_pack, List<Proxy> proxies, Map<String, WillRespond> willresponds,
-                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random,int localtried) {
+                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random,int localtried, Evaluator model_Evaluator) {
             this.URL_pack = URL_pack;
             this.proxies = proxies;
             this.willresponds = willresponds;
@@ -31,6 +32,7 @@ public class PP_Service {
             this.nbtry = nbtry;
             this.random = random;
             this.localtried = localtried;
+            this.model_Evaluator = model_Evaluator;
         }
 
         public static long getStartTime() {
@@ -46,23 +48,24 @@ public class PP_Service {
         }
 
         public void run() {
-            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random, localtried);
+            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random, localtried, model_Evaluator);
         }
 
     }
 
     private static Map<String, WillRespond> callProxyProvider(List<URL> URL_pack, List<Proxy> proxies,
-            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random,int localtried) {
+            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random,int localtried, Evaluator model_Evaluator) {
         // call the service with the given arguments
-        List<URL> URL_next_pack = new ArrayList<>();
+        
+        while (URL_pack.size() > 0 && nbtry < 6){
 
-        if (URL_pack.size() > 0 && nbtry < 6){
+            List<URL> URL_next_pack = new ArrayList<>();
 
             for (URL url : URL_pack) {
 
                 // Proxy matchingProxy = findMatchingProxy(url, proxies, random);
                 String timestamp_proxy = getTime();
-                Proxy matchingProxy = findMatchingProxy(url, proxies, random, timestamp_proxy);
+                Proxy matchingProxy = findMatchingProxy(url, proxies, random, timestamp_proxy, model_Evaluator);
 
                 if (matchingProxy != null) {
 
@@ -101,23 +104,14 @@ public class PP_Service {
                     // System.out.println("No matching proxy found for Website: " + url.getId_website());
                 }
             }
+
+            URL_pack = URL_next_pack;
+            nbtry+=1;
             localtried = localtried + URL_next_pack.size();
-            callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random, localtried);
+            System.out.println("Amount of loops made :" + nbtry);
         } 
         System.out.println("Here is the number of retries for this thread : " + localtried);
         return willresponds;
-    }
-
-    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies) {
-    for (Proxy proxy : proxies) {
-    if (proxy.getType_Proxy() == url.getType_URL()) {
-    List<String> proxyCountries = proxy.getCountryName_Proxy();
-    if (proxyCountries.contains(url.getCountry_name_URL())) {
-    return proxy;
-    }
-    }
-    }
-    return null;
     }
 
     // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random) {
@@ -146,7 +140,7 @@ public class PP_Service {
     //     return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
     // }
 
-    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random, String timestamp) {
+    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random, String timestamp, Evaluator model_Evaluator) {
         try {
             List<Proxy> matchingProxies = new ArrayList<>();
 
@@ -170,7 +164,7 @@ public class PP_Service {
             // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
             // obtenue
 
-            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
+            
 
             List<Proxy> selectedProxies = new ArrayList<>();
             Proxy selectedProxy = null;
@@ -191,7 +185,7 @@ public class PP_Service {
                 inputData.put("Id_Website", webid);
                 inputData.put("time_elapsed", totalSeconds);
 
-                Map<String, ?> results = evaluator.evaluate(inputData);
+                Map<String, ?> results = model_Evaluator.evaluate(inputData);
                 results = EvaluatorUtil.decodeAll(results);
 
                 Object resultObject = results.get("Success");
