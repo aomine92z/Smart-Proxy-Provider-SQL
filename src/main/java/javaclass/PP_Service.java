@@ -19,10 +19,10 @@ public class PP_Service {
         private static long startTime;
         private int nbtry;
         private Random random;
-        private AtomicInteger localtried;
+        private int localtried;
 
         public ServiceRunner(List<URL> URL_pack, List<Proxy> proxies, Map<String, WillRespond> willresponds,
-                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random,AtomicInteger localtried) {
+                Map<String, SimulationWillRespond> simuwillresponds, long startTime, int nbtry, Random random,int localtried) {
             this.URL_pack = URL_pack;
             this.proxies = proxies;
             this.willresponds = willresponds;
@@ -30,14 +30,14 @@ public class PP_Service {
             ServiceRunner.startTime = startTime;
             this.nbtry = nbtry;
             this.random = random;
-            this.localtried =localtried;
+            this.localtried = localtried;
         }
 
         public static long getStartTime() {
             return startTime;
         }
 
-        public AtomicInteger getLocalTried() {
+        public int getLocalTried() {
             return this.localtried;
         }
 
@@ -46,13 +46,13 @@ public class PP_Service {
         }
 
         public void run() {
-            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random, localtried,this);
+            willresponds = callProxyProvider(URL_pack, proxies, willresponds, simuwillresponds, nbtry, random, localtried);
         }
 
     }
 
     private static Map<String, WillRespond> callProxyProvider(List<URL> URL_pack, List<Proxy> proxies,
-            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random,AtomicInteger localtried,ServiceRunner serviceRunner) {
+            Map<String, WillRespond> willresponds, Map<String, SimulationWillRespond> simuwillresponds, int nbtry, Random random,int localtried) {
         // call the service with the given arguments
         List<URL> URL_next_pack = new ArrayList<>();
 
@@ -60,16 +60,16 @@ public class PP_Service {
 
             for (URL url : URL_pack) {
 
-                Proxy matchingProxy = findMatchingProxy(url, proxies, random);
-                // String timestamp_proxy = getTime();
-                // Proxy matchingProxy = findMatchingProxy(url, proxies, timestamp_proxy);
+                // Proxy matchingProxy = findMatchingProxy(url, proxies, random);
+                String timestamp_proxy = getTime();
+                Proxy matchingProxy = findMatchingProxy(url, proxies, random, timestamp_proxy);
 
                 if (matchingProxy != null) {
 
                     String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
                     SimulationWillRespond foundSimulation = simuwillresponds.get(key);
-                    System.out.println(foundSimulation);
+                    // System.out.println(foundSimulation);
                     Map<String, Object> ProbaTimeStamp = getProba(foundSimulation);
                     double proba = (double) ProbaTimeStamp.get("proba");
                     String timestamp = (String) ProbaTimeStamp.get("timestamp");
@@ -77,8 +77,8 @@ public class PP_Service {
 
                     // Choice of proxy working
                     if (random.nextDouble() > proba) {
-                        System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
-                                + " using Proxy : " + matchingProxy.getId_Proxy());
+                        // System.out.println("Proxy provider service hasn't scrapped Website : " + url.getId_website()
+                        //        + " using Proxy : " + matchingProxy.getId_Proxy());
                         WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
                                 "False", timestamp);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
@@ -88,8 +88,8 @@ public class PP_Service {
                         // newWillRespond.saveToDatabase();
 
                     } else {
-                        System.out.println("Called proxy provider service for Website : " + url.getId_website()
-                                + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
+                        // System.out.println("Called proxy provider service for Website : " + url.getId_website()
+                        //        + " using Proxy : " + matchingProxy.getId_Proxy() + " successfully.");
                         WillRespond newWillRespond = new WillRespond(url.getId_website(), matchingProxy.getId_Proxy(),
                                 "True", timestamp);
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
@@ -98,13 +98,13 @@ public class PP_Service {
                         // newWillRespond.saveToDatabase();
                     }
                 } else {
-                    System.out.println("No matching proxy found for Website: " + url.getId_website());
+                    // System.out.println("No matching proxy found for Website: " + url.getId_website());
                 }
             }
-            localtried.set(localtried.get() + URL_next_pack.size());
-            System.out.println("localtried: " + localtried.get());
-            callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random,serviceRunner.getLocalTried(), serviceRunner);
+            localtried = localtried + URL_next_pack.size();
+            callProxyProvider(URL_next_pack, proxies, willresponds, simuwillresponds, nbtry+1, random, localtried);
         } 
+        System.out.println("Here is the number of retries for this thread : " + localtried);
         return willresponds;
     }
 
@@ -120,114 +120,113 @@ public class PP_Service {
     return null;
     }
 
-    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random) {
-        List<Proxy> matchingProxies = new ArrayList<>();
+    // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random) {
+    //     List<Proxy> matchingProxies = new ArrayList<>();
 
-        for (Proxy proxy : proxies) {
-            if (proxy.getType_Proxy() == url.getType_URL()) {
-                List<String> proxyCountries = proxy.getCountryName_Proxy();
-                for (String element : url.getCountry_name_URL())
-                    if (proxyCountries.contains(element)) {
-                        matchingProxies.add(proxy);
-                        break;
-                    }
-            }
-        }
-
-        if (matchingProxies.isEmpty()) {
-            return null;
-        }
-
-        // sort la liste de proxies par probabilités historiques
-        // on sélectionne le "meilleur" proxy et on le retourne
-        // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
-        // obtenue
-        int randomIndex = random.nextInt(matchingProxies.size());
-        return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
-    }
-
-    // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, String timestamp) {
-    //     try {
-    //         List<Proxy> matchingProxies = new ArrayList<>();
-
-    //         for (Proxy proxy : proxies) {
-    //             if (proxy.getType_Proxy() == url.getType_URL()) {
-    //                 List<String> proxyCountries = proxy.getCountryName_Proxy();
-    //                 for (String element : url.getCountry_name_URL())
-    //                     if (proxyCountries.contains(element)) {
-    //                         matchingProxies.add(proxy);
-    //                         break;
-    //                     }
-    //             }
-    //         }
-
-    //         if (matchingProxies.isEmpty()) {
-    //             return null;
-    //         }
-
-    //         // sort la liste de proxies par probabilités historiques
-    //         // on sélectionne le "meilleur" proxy et on le retourne
-    //         // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
-    //         // obtenue
-
-    //         Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
-
-    //         List<Proxy> selectedProxies = new ArrayList<>();
-    //         Proxy selectedProxy = null;
-    //         int webid = url.getId_website();
-
-
-    //         for (Proxy proxy : matchingProxies) {
-
-    //             Map<String, Object> inputData = new HashMap<>();
-            
-    //             String[] timeComponents = timestamp.split(":");
-    //             int hours = Integer.parseInt(timeComponents[0]);
-    //             int minutes = Integer.parseInt(timeComponents[1]);
-    //             int seconds = Integer.parseInt(timeComponents[2]);
-    //             int totalSeconds = hours*3600 + minutes*60 + seconds;
-
-    //             inputData.put("Id_proxy", proxy.getId_Proxy());
-    //             inputData.put("Id_Website", webid);
-    //             inputData.put("time_elapsed", totalSeconds);
-
-    //             Map<String, ?> results = evaluator.evaluate(inputData);
-    //             results = EvaluatorUtil.decodeAll(results);
-
-    //             Object resultObject = results.get("Success");
-
-
-    //             if (resultObject instanceof Integer) {
-    //                 Integer success = (Integer) resultObject;
-    //                 if (success == 1) {
-    //                     selectedProxies.add(proxy);
+    //     for (Proxy proxy : proxies) {
+    //         if (proxy.getType_Proxy() == url.getType_URL()) {
+    //             List<String> proxyCountries = proxy.getCountryName_Proxy();
+    //             for (String element : url.getCountry_name_URL())
+    //                 if (proxyCountries.contains(element)) {
+    //                     matchingProxies.add(proxy);
+    //                     break;
     //                 }
-    //             }
-
     //         }
-
-    //         Random random = new Random();
-    //         if(selectedProxies.size() > 0){
-    //             int randomIndex = random.nextInt(selectedProxies.size());
-    //             selectedProxy = selectedProxies.get(randomIndex);
-    //         } else{
-    //             return null;
-    //         }
-            
-
-    //         // Random random = new Random();
-    //         // int randomIndex = random.nextInt(matchingProxies.size());
-    //         // return matchingProxies.get(randomIndex); // c'est ici que se fera le choix
-    //         // "intelligent" du proxy
-    //         return selectedProxy;
-
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //         return null;
-
     //     }
 
+    //     if (matchingProxies.isEmpty()) {
+    //         return null;
+    //     }
+
+    //     // sort la liste de proxies par probabilités historiques
+    //     // on sélectionne le "meilleur" proxy et on le retourne
+    //     // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
+    //     // obtenue
+    //     int randomIndex = random.nextInt(matchingProxies.size());
+    //     return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
     // }
+
+    private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random, String timestamp) {
+        try {
+            List<Proxy> matchingProxies = new ArrayList<>();
+
+            for (Proxy proxy : proxies) {
+                if (proxy.getType_Proxy() == url.getType_URL()) {
+                    List<String> proxyCountries = proxy.getCountryName_Proxy();
+                    for (String element : url.getCountry_name_URL())
+                        if (proxyCountries.contains(element)) {
+                            matchingProxies.add(proxy);
+                            break;
+                        }
+                }
+            }
+
+            if (matchingProxies.isEmpty()) {
+                return null;
+            }
+
+            // sort la liste de proxies par probabilités historiques
+            // on sélectionne le "meilleur" proxy et on le retourne
+            // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
+            // obtenue
+
+            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
+
+            List<Proxy> selectedProxies = new ArrayList<>();
+            Proxy selectedProxy = null;
+            int webid = url.getId_website();
+
+
+            for (Proxy proxy : matchingProxies) {
+
+                Map<String, Object> inputData = new HashMap<>();
+            
+                String[] timeComponents = timestamp.split(":");
+                int hours = Integer.parseInt(timeComponents[0]);
+                int minutes = Integer.parseInt(timeComponents[1]);
+                int seconds = Integer.parseInt(timeComponents[2]);
+                int totalSeconds = hours*3600 + minutes*60 + seconds;
+ 
+                inputData.put("Id_proxy", proxy.getId_Proxy());
+                inputData.put("Id_Website", webid);
+                inputData.put("time_elapsed", totalSeconds);
+
+                Map<String, ?> results = evaluator.evaluate(inputData);
+                results = EvaluatorUtil.decodeAll(results);
+
+                Object resultObject = results.get("Success");
+
+
+                if (resultObject instanceof Integer) {
+                    Integer success = (Integer) resultObject;
+                    if (success == 1) {
+                        selectedProxies.add(proxy);
+                    }
+                }
+
+            }
+
+            if(selectedProxies.size() > 0){
+                int randomIndex = random.nextInt(selectedProxies.size());
+                selectedProxy = selectedProxies.get(randomIndex);
+            } else{
+                return null;
+            }
+            
+
+            // Random random = new Random();
+            // int randomIndex = random.nextInt(matchingProxies.size());
+            // return matchingProxies.get(randomIndex); // c'est ici que se fera le choix
+            // "intelligent" du proxy
+            return selectedProxy;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+
+        }
+
+    }
 
     private static String getTime() {
         // Receive the current timestamp

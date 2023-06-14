@@ -36,14 +36,6 @@ public class robot {
 
         while (System.currentTimeMillis() < endTime) {
 
-            AtomicInteger localtried1 = new AtomicInteger(0);
-            AtomicInteger localtried2 = new AtomicInteger(0);
-            AtomicInteger localtried3 = new AtomicInteger(0);
-            AtomicInteger localtried4 = new AtomicInteger(0);
-            AtomicInteger localtried5 = new AtomicInteger(0);
- 
-
-
             // Recevoir le timestamp actuel
             long elapsedTime = System.currentTimeMillis() - startTime;
 
@@ -90,15 +82,15 @@ public class robot {
 
             List<PP_Service.ServiceRunner> serviceRunners = new ArrayList<>();
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried1));
+                    .add(new PP_Service.ServiceRunner(URL_pack1, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried2));
+                    .add(new PP_Service.ServiceRunner(URL_pack2, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried3));
+                    .add(new PP_Service.ServiceRunner(URL_pack3, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried4));
+                    .add(new PP_Service.ServiceRunner(URL_pack4, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
             serviceRunners
-                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random,localtried5));
+                    .add(new PP_Service.ServiceRunner(URL_pack5, proxies, willresponds, simuwillresponds, startTime, 1, random, 0));
 
             List<Thread> threads = new ArrayList<>();
 
@@ -123,16 +115,16 @@ public class robot {
                 thread.join();
                 }
             
-            for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
-                // System.out.println("localtried: " + serviceRunner.getLocalTriedResult());
-                System.out.println("localtried: " + serviceRunner.getLocalTried());
-                globaltried.addAndGet(serviceRunner.getLocalTried().get()); 
-            }
+            // for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
+            //     // System.out.println("localtried: " + serviceRunner.getLocalTriedResult());
+            //     System.out.println("localtried: " + serviceRunner.getLocalTried());
+            //     globaltried.addAndGet(serviceRunner.getLocalTried().get()); 
+            // }
 
             // System.out.println("localtried: " + localtried);
             // globaltried += localtried;
         
-            System.out.println("globaltried: " + globaltried);
+            // System.out.println("globaltried: " + globaltried);
 
             Map<String, WillRespond> willRespondFinal = new HashMap<>();
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
@@ -165,7 +157,7 @@ public class robot {
 
         try {
             // Connexion à la base de données
-            System.out.println(willRespondsMap.size());
+            // System.out.println(willRespondsMap.size());
             conn = DriverManager.getConnection("jdbc:sqlite:test.db");
 
             for (Map.Entry<String, WillRespond> willRespond : willRespondsMap.entrySet()) {
