@@ -84,9 +84,6 @@ public class URL {
 
     public String toString() {
         String countryNamesStr = String.join(", ", this.country_name);
-        // return "Id_URL: " + this.id_url + " || Type: " + this.type + " ||
-        // Country_name: " + countryNamesStr
-        // + " || Id_Website: " + this.id_website;
         return " Id_Website: " + this.id_website + " || Type: " + this.type + " || Country_name: " + countryNamesStr;
     }
 }

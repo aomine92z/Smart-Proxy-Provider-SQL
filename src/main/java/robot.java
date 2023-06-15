@@ -45,7 +45,7 @@ public class robot {
             Map<String, WillRespond> willresponds = WillRespond.load_willRespond();
             Map<String, SimulationWillRespond> simuwillresponds = SimulationWillRespond.load_simulationWillRespond();
             System.out.println("Model started building...");
-            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model.pmml")).build();
+            Evaluator evaluator = new LoadingModelEvaluatorBuilder().load(new File("model/trained_model2.pmml")).build();
             System.out.println("Model has been built.");
 
 
@@ -72,25 +72,28 @@ public class robot {
 
             List<Thread> threads = new ArrayList<>();
 
-
+            // Start the service runners in separate threads
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
                 Thread thread = new Thread(serviceRunner);
                 threads.add(thread);
                 thread.start();
             }
             
+             // Wait for all the threads to complete
             for (Thread thread : threads) {
                 thread.join();
                 }
             
-
+            // Collect the final willRespond data from all the service runners
             Map<String, WillRespond> willRespondFinal = new HashMap<>();
             for (PP_Service.ServiceRunner serviceRunner : serviceRunners) {
                 willRespondFinal.putAll(serviceRunner.getWillResponds());
             }
 
+            // Save the collected willRespond data
             saveData(willRespondFinal);
-
+            
+            // Sleep for 1 minute before the next iteration
             Thread.sleep(60000);
         }
         

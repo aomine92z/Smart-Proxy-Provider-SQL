@@ -1,14 +1,11 @@
 package javaclass;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 import org.jpmml.evaluator.*;
-import java.io.File;
 
 public class PP_Service {
 
@@ -63,8 +60,10 @@ public class PP_Service {
             List<URL> URL_next_pack = new ArrayList<>();
 
             for (URL url : URL_pack) {
-
+                // For Random choose Proxy
                 // Proxy matchingProxy = findMatchingProxy(url, proxies, random);
+                 
+                // For Model (Smart Proxy Provider) choose proxy
                 String timestamp_proxy = getTime();
                 Proxy matchingProxy = findMatchingProxy(url, proxies, random, timestamp_proxy, model_Evaluator);
 
@@ -73,11 +72,10 @@ public class PP_Service {
                     String key = url.getId_website() + "-" + matchingProxy.getId_Proxy();
 
                     SimulationWillRespond foundSimulation = simuwillresponds.get(key);
-                    // System.out.println(foundSimulation);
                     Map<String, Object> ProbaTimeStamp = getProba(foundSimulation);
                     double proba = (double) ProbaTimeStamp.get("proba");
                     String timestamp = (String) ProbaTimeStamp.get("timestamp");
-                    String key2 = url.getId_URL() + "-" + matchingProxy.getId_Proxy();
+
 
                     // Choice of proxy working
                     if (random.nextDouble() > proba) {
@@ -89,7 +87,6 @@ public class PP_Service {
                         willresponds.put(newKey, newWillRespond);
 
                         URL_next_pack.add(url);
-                        // newWillRespond.saveToDatabase();
 
                     } else {
                         // System.out.println("Called proxy provider service for Website : " + url.getId_website()
@@ -99,7 +96,6 @@ public class PP_Service {
                         String newKey = url.getId_URL() + "-" + matchingProxy.getId_Proxy() + "-" + timestamp;
                         ;
                         willresponds.put(newKey, newWillRespond);
-                        // newWillRespond.saveToDatabase();
                     }
                 } else {
                     // System.out.println("No matching proxy found for Website: " + url.getId_website());
@@ -114,7 +110,7 @@ public class PP_Service {
         System.out.println("Here is the number of retries for this thread : " + localtried);
         return willresponds;
     }
-
+    // // For Random choose Proxy
     // private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random) {
     //     List<Proxy> matchingProxies = new ArrayList<>();
 
@@ -141,6 +137,7 @@ public class PP_Service {
     //     return matchingProxies.get(randomIndex); // c'est ici que se fera le choix "intelligent" du proxy
     // }
 
+    // For model(Smart Proxy Provider) choose Proxy
     private static Proxy findMatchingProxy(URL url, List<Proxy> proxies, Random random, String timestamp, Evaluator model_Evaluator) {
         try {
             List<Proxy> matchingProxies = new ArrayList<>();
@@ -165,13 +162,10 @@ public class PP_Service {
             // si y'en a plusieurs qui ont la même proba faire un random sur la sous liste
             // obtenue
 
-            Proxy selectedProxy = null;
+            List<Proxy> selectedProxies = new ArrayList<>();
+             Proxy selectedProxy = null;
             int webid = url.getId_website();
-            Map<Double, Proxy> proxyClassifier = new HashMap<>();
-
-
             for (Proxy proxy : matchingProxies) {
-
                 Map<String, Object> inputData = new HashMap<>();
             
                 String[] timeComponents = timestamp.split(":");
@@ -180,41 +174,39 @@ public class PP_Service {
                 int seconds = Integer.parseInt(timeComponents[2]);
                 int totalSeconds = hours*3600 + minutes*60 + seconds;
  
-                inputData.put("Id_Proxy", proxy.getId_Proxy());
+                inputData.put("Id_proxy", proxy.getId_Proxy());
                 inputData.put("Id_Website", webid);
-                inputData.put("time_difference", totalSeconds);
+                inputData.put("time_elapsed", totalSeconds);
+
 
                 Map<String, ?> results = model_Evaluator.evaluate(inputData);
-
                 results = EvaluatorUtil.decodeAll(results);
-                Double resultObject = (double) results.get("probability(1)");
-                System.out.println(resultObject);
 
-                proxyClassifier.put(resultObject, proxy);
-
+                Object resultObject = results.get("Success");
+            if (resultObject instanceof Integer) {
+                Integer success = (Integer) resultObject;
+                if (success == 1) {
+                    selectedProxies.add(proxy);
+                }
             }
-            
-            if(proxyClassifier.size() > 0){
-                selectedProxy = proxyClassifier.get(Collections.max(proxyClassifier.keySet()));
-                // System.out.println(selectedProxy);
-            } else{
-                return null;
-            }
-            
-
-            // Random random = new Random();
-            // int randomIndex = random.nextInt(matchingProxies.size());
-            // return matchingProxies.get(randomIndex); // c'est ici que se fera le choix
-            // "intelligent" du proxy
-            return selectedProxy;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-
         }
-
+        if(selectedProxies.size() > 0){
+            int randomIndex = random.nextInt(selectedProxies.size());
+            selectedProxy = selectedProxies.get(randomIndex);
+        } else{
+            return null;
+        }
+        
+        // Random random = new Random();
+        // int randomIndex = random.nextInt(matchingProxies.size());
+        // return matchingProxies.get(randomIndex); // c'est ici que se fera le choix
+        // "intelligent" du proxy
+        return selectedProxy;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return null;
     }
+}
 
     private static String getTime() {
         // Receive the current timestamp
@@ -232,63 +224,7 @@ public class PP_Service {
         return time;
     }
 
-    
-
-    // private boolean getAttempt() {
-
-    // }
-
-    // private static void countTries(URL url, Proxy proxy, boolean TriedOk){
-    // Connection conn = null;
-    // try {
-    // // Load the SQLite JDBC driver
-    // Class.forName("org.sqlite.JDBC");
-
-    // // Connect to the database (create a new one if it doesn't exist)
-    // conn = DriverManager.getConnection("jdbc:sqlite:test.db");
-
-    // // String sql = "UPDATE INTO willRespond (Id_URL, Id_Proxy, triedOk,
-    // triedTotal) VALUES (?, ?, ?, COALESCE((SELECT triedTotal FROM willRespond
-    // WHERE Id_URL = ? AND Id_Proxy = ?), 0) + 1)";
-
-    // // try (PreparedStatement statement = conn.prepareStatement(sql)) {
-    // // statement.setInt(1, url.getId_URL());
-    // // statement.setInt(2, proxy.getId_Proxy());
-    // // statement.setInt(3, TriedOk ? 1 : 0);
-    // // statement.setInt(4, 1);
-    // // int rows = statement.executeUpdate();
-    // // }
-
-    // String sql = "INSERT INTO willRespond (Id_URL, Id_Proxy, triedOk, triedTotal)
-    // " +
-    // "VALUES (?, ?, ?, 1) " +
-    // "ON CONFLICT(Id_URL, Id_Proxy) DO " +
-    // "UPDATE SET triedOk = triedOk + ?, triedTotal = triedTotal + 1";
-
-    // try (PreparedStatement statement = conn.prepareStatement(sql)) {
-    // statement.setInt(1, url.getId_URL());
-    // statement.setInt(2, proxy.getId_Proxy());
-    // statement.setInt(3, TriedOk ? 1 : 0);
-    // statement.setInt(4, TriedOk ? 1 : 0);
-    // statement.executeUpdate();
-    // }
-
-    // } catch (ClassNotFoundException | SQLException e) {
-    // e.printStackTrace();
-    // } finally {
-    // try {
-    // if (conn != null) {
-    // conn.close();
-    // }
-    // } catch (SQLException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // }
-
     // Recevoir la probabilité pour qu'un proxy fonctionne
-    
     public static Map<String, Object> getProba(SimulationWillRespond foundSimulation) {
         double proba = 0;
         String timestamp = PP_Service.getTime();
