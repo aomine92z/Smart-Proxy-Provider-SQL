@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="SkLearn2PMML package" version="0.93.0"/>
+		<Timestamp>2023-06-15T14:16:41Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="success" optype="categorical" dataType="integer">
+			<Value value="0"/>
+			<Value value="1"/>
+		</DataField>
+		<DataField name="Id_Website" optype="continuous" dataType="double"/>
+		<DataField name="Id_Proxy" optype="continuous" dataType="double"/>
+		<DataField name="success(-1)" optype="continuous" dataType="double"/>
+		<DataField name="time_difference_elapsed" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<RegressionModel functionName="classification" algorithmName="sklearn.linear_model._logistic.LogisticRegression" normalizationMethod="logit">
+		<MiningSchema>
+			<MiningField name="success" usageType="target"/>
+			<MiningField name="Id_Website"/>
+			<MiningField name="Id_Proxy"/>
+			<MiningField name="success(-1)"/>
+			<MiningField name="time_difference_elapsed"/>
+		</MiningSchema>
+		<Output>
+			<OutputField name="probability(0)" optype="continuous" dataType="double" feature="probability" value="0"/>
+			<OutputField name="probability(1)" optype="continuous" dataType="double" feature="probability" value="1"/>
+		</Output>
+		<RegressionTable intercept="-1.9978918243374788" targetCategory="1">
+			<NumericPredictor name="Id_Website" coefficient="-4.287503599097792E-5"/>
+			<NumericPredictor name="Id_Proxy" coefficient="-5.630779166091974E-5"/>
+			<NumericPredictor name="success(-1)" coefficient="2.624189264801817"/>
+			<NumericPredictor name="time_difference_elapsed" coefficient="-2.754296245423189E-4"/>
+		</RegressionTable>
+		<RegressionTable intercept="0.0" targetCategory="0"/>
+	</RegressionModel>
+</PMML>

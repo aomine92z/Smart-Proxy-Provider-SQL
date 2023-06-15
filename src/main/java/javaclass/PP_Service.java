@@ -180,9 +180,9 @@ public class PP_Service {
                 int seconds = Integer.parseInt(timeComponents[2]);
                 int totalSeconds = hours*3600 + minutes*60 + seconds;
  
-                inputData.put("Id_proxy", proxy.getId_Proxy());
+                inputData.put("Id_Proxy", proxy.getId_Proxy());
                 inputData.put("Id_Website", webid);
-                inputData.put("time_elapsed", totalSeconds);
+                inputData.put("time_difference", totalSeconds);
 
                 Map<String, ?> results = model_Evaluator.evaluate(inputData);
 
